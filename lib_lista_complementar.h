@@ -5,7 +5,7 @@
 */
 
 #include <stdio.h>
-#include "lista.h"
+#include "lib_lista.h"
 
 #define MAX 5
 
