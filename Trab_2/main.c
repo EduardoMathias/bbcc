@@ -3,9 +3,14 @@
 #include <unistd.h>
 #include "elem.h"
 #include <stdlib.h>
+#include <time.h>
+
+int disparado;
+int direction;
+int tick;
 
 //Moldando o Formato da Barreira
-#define condformato1 ((k == 0 && b == 0) || (k== 6 && b == 0) ||(k == 2 && b == 2) || (k == 4 && b == 2) || (k == 3 && b == 2)) 
+#define condformato1 ((k == 0 && b == 0) || (k== 6 && b == 0) ||(k == 2 && b == 2) || (k == 4 && b == 2) || (k == 3 && b == 2))
 
 void desenhaAlien(Alien *alien){
  for (int i = 0; i < 55; i++){
@@ -14,6 +19,23 @@ void desenhaAlien(Alien *alien){
 	mvprintw(alien[i].y+1, alien[i].x, alien[i].meio);
 	mvprintw(alien[i].y+2, alien[i].x, alien[i].baixo);}
  }
+}
+
+void MudaDirection(Alien *alien, int limiteTela){
+    for(int i= 0; i < 55; i++){
+        if(alien[i].x == limiteTela)
+            direction = -1;
+        if(alien[i]. x == 1)
+            direction = 1;
+    }
+}
+
+void AtualizaAlien(Alien *alien){
+    for(int i=0; i < 55; i++){
+        if(alien[i].vivo == 1){
+            alien[i].x+= direction;
+        }
+    }
 }
 
 void desenhaBarreira(Barreira barreira1[3][7], Barreira barreira2[3][7], Barreira barreira3[3][7], Barreira barreira4[3][7]){
@@ -30,6 +52,12 @@ for (int i = 0; i < 3; i++){
  }
 }}
 
+void disparaMissel(Missel missel, Missel misselalien){
+    if(disparado){
+    mvprintw(missel.y, missel.x, missel.tiro);
+    mvprintw(misselalien.y, misselalien.x, misselalien.tiro);}
+    disparado = 0;
+}
 
 int main(){
 	Alien alien[55];
@@ -38,9 +66,9 @@ int main(){
 	int cont,cont2,cont3,cont4 = 0;
 	initscr();
     cbreak();
-	noecho();               
-    nodelay(stdscr, TRUE);  
-    keypad(stdscr, TRUE);  
+	noecho();
+    nodelay(stdscr, TRUE);
+    keypad(stdscr, TRUE);
     curs_set(FALSE);
     getmaxyx(stdscr, nlin, ncol);
     //Aliens
@@ -59,7 +87,7 @@ int main(){
 		alien[i] = inicializaAlien3(ncol/18 + (6*cont4 + 1), nlin/12 + 12.8);
     	cont4++;}
     //Barreiras
-    for(int b = 0; b < 3; b++){	
+    for(int b = 0; b < 3; b++){
   	 for (int k= 0; k < 7; k++){
   	 	if(condformato1){
   	 	barreira1[b][k].atingido = 1;
@@ -73,10 +101,16 @@ int main(){
     	barreira4[b][k]= inicializaBarreira(ncol/15 + 60 + k, nlin - 6 + b);}
     }
 	}
-
     Nave nave = inicializaNave(ncol/2, nlin-2);
-while((key = getch())){  
-	if(key == ' ');
+    Missel missel = inicializaMissel(nave.x, nlin -4);
+    Missel misselalien = inicializaMisselAlien(alien[0].x +2 , alien[0].y + 4);
+    disparado = 0;
+    direction = 1;
+    tick = 0;
+while((key = getch())){
+	if(key == ' '){
+        disparado = 1;
+    }
 	else
 		if(key == KEY_LEFT && nave.x > 0) {
     		nave.x--;
@@ -92,8 +126,21 @@ while((key = getch())){
 	usleep(20000);
 	mvprintw(nave.y,nave.x,nave.cima);
 	mvprintw(nave.y+1,nave.x,nave.baixo);
+    //
+    srand(time(NULL));
+    int r = rand ()% (54 + 1);
+    misselalien.x = alien[r].x + 2;
+    misselalien.y = alien[r].y + 4;
+    //
+    missel.x = nave.x + 1;
+    disparaMissel(missel, misselalien);
+    missel.y-= 0.001;
+    misselalien.y += 0.000001;
 	desenhaBarreira(barreira1,barreira2,barreira3,barreira4);
 	desenhaAlien(alien);
+    AtualizaAlien(alien);
+    MudaDirection(alien, nlin);
+    tick++;
 	refresh();
 }
    endwin();
