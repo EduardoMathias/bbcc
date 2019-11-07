@@ -4,7 +4,7 @@ Nave inicializaNave(int x, int y){
 	Nave NovaNave = {
 		" /^\\ ", "MMMMM", x, y
 	};
-	return NovaNave; 
+	return NovaNave;
 }
 Alien inicializaAlien1(int x,int y){
 	Alien Alien1 = {
@@ -26,4 +26,18 @@ Barreira inicializaBarreira(int x, int y){
 		"M", x, y, 0
 	};
 	return NovaBarreira;
+}
+
+Missel inicializaMissel(int x, int y){
+    Missel NovoMissel ={
+        "|",x,y,0
+    };
+    return NovoMissel;
+}
+
+Missel inicializaMisselAlien(int x, int y){
+    Missel NovoMisselAlien = {
+        "$", x,y,0
+    };
+    return NovoMisselAlien;
 }
