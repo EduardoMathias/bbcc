@@ -56,6 +56,73 @@ int insere_fim_lista(int tipo, int lin, int col, int velocidade, int condicao, t
 	return 1;
 }
 
+int inicializa_atual_inicio(t_lista *l){
+	l->atual = l->ini;
+	return 1;
+}
+
+int inicializa_atual_fim(t_lista *l){
+    t_nodo*aux;
+    if(l->ini){
+		aux = l->ini;
+		while(aux->prox != NULL){
+			aux = aux->prox;
+		}
+		l->atual = aux;
+	}
+    else 
+        l->atual = l->ini;
+    return 1;
+}
+
+void incrementa_atual(t_lista *l){
+    if(l->atual != NULL)
+        l->atual = l->atual->prox;
+}
+
+void decrementa_atual(t_lista *l){
+    t_nodo *aux;
+    if(l->atual != NULL && l->atual != l->ini){
+        aux= l->ini;
+    while(aux->prox != l->atual)
+        aux = aux->prox;
+    l->atual = aux;
+    }
+}
+
+int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *condicao, t_lista *l){
+    if (l->atual == NULL)
+		return 0;
+	*tipo = l->atual->tipo;
+	*lin = l->atual->x;
+	*col = l->atual->y;
+	*velocidade = l->atual->velocidade;
+	*condicao = l->atual->condicao;
+	return 1;
+}
+
+int remove_item_atual(t_lista *l){
+    t_nodo *elem, *aux;
+	elem = l->ini;
+	aux = NULL;
+	while(elem != NULL && elem != l->atual){
+		aux= elem;
+		elem= elem->prox;
+	}
+	if(elem != NULL){
+		if(elem == l->ini)
+			l->ini = elem->prox;
+		if(aux)
+			aux->prox = elem->prox;
+		free(elem);
+	}
+	else{
+		return 0;
+	}
+	l->tamanho--;
+	return 1;
+}
+
 
 Nave inicializaNave(int x, int y){
 	Nave NovaNave = {

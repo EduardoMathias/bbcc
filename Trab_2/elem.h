@@ -19,7 +19,12 @@ typedef struct t_lista t_lista;
 int inicializa_lista(t_lista *l);
 int insere_inicio_lista(int tipo, int lin, int col, int velocidade, int condicao, t_lista *l);
 int insere_fim_lista(int tipo, int lin, int col, int velocidade, int condicao, t_lista *l);
+int inicializa_atual_inicio(t_lista *l);
+int inicializa_atual_fim(t_lista *l);
+void incrementa_atual(t_lista *l);
+void decrementa_atual(t_lista *l);
 int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *condicao, t_lista *l);
+int remove_item_atual(t_lista *l);
 
 typedef struct {
 	char cima[6];
