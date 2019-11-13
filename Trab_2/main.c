@@ -11,14 +11,91 @@ int tick;
 
 //Moldando o Formato da Barreira
 #define condformato1 ((k == 0 && b == 0) || (k== 6 && b == 0) ||(k == 2 && b == 2) || (k == 4 && b == 2) || (k == 3 && b == 2))
+#define INTERVALO 5000
 
-void desenhaAlien(Alien *alien){
- for (int i = 0; i < 55; i++){
-	if(alien[i].vivo == 1){
-	mvprintw(alien[i].y, alien[i].x, alien[i].cima);
-	mvprintw(alien[i].y+1, alien[i].x, alien[i].meio);
-	mvprintw(alien[i].y+2, alien[i].x, alien[i].baixo);}
- }
+int insere_navemae(t_lista *l_tela)
+{
+    insere_fim_lista(0, 3, 1, 0, 1, l_tela); 
+	return 1;
+}
+
+int insere_aliens( t_lista *l_tela )
+{
+	int i, j;
+	for (i = 0; i < 11; i++)
+		insere_fim_lista(1, 7, (5 + 7*i), 0, 1, l_tela); 	
+	for (i = 0; i < 2; i++)
+		for (j = 0; j < 11; j++)
+			insere_fim_lista(2, (11 + 4*i), (4 + 7*j), 0, 1, l_tela); 
+	for (i = 0; i < 2; i++)
+		for (j = 0; j < 11; j++)
+			insere_fim_lista(3, (19 + 4*i), (4 + 7*j), 0, 1, l_tela);
+	return 1;
+}
+
+int insere_barreiras(t_lista *l_tela)
+{
+	int i;
+	for (i = 0; i < 4; i++)
+        insere_fim_lista(4, 31, (15 + 21*i), 0, 1, l_tela);
+	return 1;
+}
+
+int insere_nave(t_lista *l_tela)
+{
+	insere_fim_lista(5, 35, 43, 0, 1, l_tela);
+	return 1;
+}
+
+int inicializa_lista_tela( t_lista *l_tela )
+{
+	inicializa_lista(l_tela);
+	insere_navemae(l_tela);
+	insere_aliens(l_tela);
+	insere_barreiras(l_tela);
+	insere_nave(l_tela);
+	return 1;
+}
+
+
+void Desenha_borda()
+{
+	int i, j;
+	
+	for (i = 0; i < 38; i += 37)
+		for (j = 0; j < 100; j++)
+			{
+				move(i, j);
+				addch('*');
+			}
+
+	for (i = 1; i < 37; i++)
+		for (j = 0; j < 100; j += 99)
+		{
+			move(i, j);
+			addch('*');
+		}
+}
+
+
+void Desenha_alien(int lin, int col, int tipo, Alien *alien)
+{
+	int i, j, nlin, ncol;
+	char *forma_atual;
+	
+	if (!alien[tipo].forma_inicial)
+		forma_atual = alien[tipo].tipo1;
+	else
+		forma_atual = alien[tipo].tipo2;
+	
+	nlin = alien[tipo].altura;
+	ncol = alien[tipo].largura;
+	for (i = 0; i < nlin; i++)
+		for (j = 0; j < alien[tipo].largura; j++)
+			{
+				move(lin+i, col+j);
+				addch(forma_atual[ncol*i + j]);
+			}
 }
 
 void MudaDirection(Alien *alien, int limiteTela){
@@ -30,13 +107,13 @@ void MudaDirection(Alien *alien, int limiteTela){
     }
 }
 
-void AtualizaAlien(Alien *alien){
+/*void AtualizaAlien(Alien *alien){
     for(int i=0; i < 55; i++){
         if(alien[i].vivo == 1){
             alien[i].x+= direction;
         }
     }
-}
+}*/
 
 void desenhaBarreira(Barreira barreira1[3][7], Barreira barreira2[3][7], Barreira barreira3[3][7], Barreira barreira4[3][7]){
 for (int i = 0; i < 3; i++){
@@ -60,10 +137,12 @@ void disparaMissel(Missel missel, Missel misselalien){
 }
 
 int main(){
-	Alien alien[55];
+	Alien alien[3];
 	Barreira barreira1[3][7], barreira2[3][7], barreira3[3][7], barreira4[3][7];
 	int key,ncol,nlin;
 	int cont,cont2,cont3,cont4 = 0;
+
+//inicializa tela
 	initscr();
     cbreak();
 	noecho();
@@ -71,21 +150,17 @@ int main(){
     keypad(stdscr, TRUE);
     curs_set(FALSE);
     getmaxyx(stdscr, nlin, ncol);
+    if (nlin < 38 || ncol < 100)
+	{
+		endwin();
+		return 0;
+	}
+
+
     //Aliens
-    for (int i = 0; i < 11; i++){
-		alien[i] = inicializaAlien1(ncol/18 + (6*i +2), nlin/12);}
-    for(int i= 11; i < 22; i++){
-		alien[i] = inicializaAlien2(ncol/18 + (6*cont + 1) , nlin/12 + 3.2);
-		++cont;}
-    for(int i = 22; i < 33; i++){
-		alien[i] = inicializaAlien3(ncol/18 + (6*cont2 + 1) , nlin/12 + 6.4);
-    	cont2++;}
-    for(int i = 33; i < 44; i++){
-		alien[i] = inicializaAlien2(ncol/18 + (6*cont3 + 1), nlin/12 + 9.6);
-    	cont3++;}
-    for (int i = 44; i < 55; i++){
-		alien[i] = inicializaAlien3(ncol/18 + (6*cont4 + 1), nlin/12 + 12.8);
-    	cont4++;}
+	alien[1] = inicializaAlien1();
+	alien[2] = inicializaAlien2();
+    alien[3] = inicializaAlien3();
     //Barreiras
     for(int b = 0; b < 3; b++){
   	 for (int k= 0; k < 7; k++){
@@ -138,7 +213,7 @@ while((key = getch())){
     misselalien.y += 0.000001;
 	desenhaBarreira(barreira1,barreira2,barreira3,barreira4);
 	desenhaAlien(alien);
-    AtualizaAlien(alien);
+    //AtualizaAlien(alien);
     MudaDirection(alien, nlin);
     tick++;
 	refresh();

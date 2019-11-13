@@ -27,37 +27,40 @@ int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *con
 int remove_item_atual(t_lista *l);
 
 typedef struct {
-	char cima[6];
-	char meio[6];
-	char baixo[6];
-	int x,y,vivo;
-
+	char tipo1[28];
+	char tipo2[28];
+    int forma_inicial;
+    int altura,largura;
 }Alien;
 
-Alien inicializaAlien1(int x,int y);
-Alien inicializaAlien2(int x, int y);
-Alien inicializaAlien3(int x, int y);
+Alien inicializaAlien1();
+Alien inicializaAlien2();
+Alien inicializaAlien3();
 
 typedef struct{
 	char cima[6];
 	char baixo[6];
-	int x,y;
 }Nave;
 
-Nave inicializaNave(int x, int y);
+Nave inicializaNave();
 
 typedef struct{
 	char bloco[1];
-	int x,y, atingido;
 }Barreira;
 
-Barreira inicializaBarreira(int x,int y);
+Barreira inicializaBarreira();
 
 typedef struct{
     char tiro[1];
-    int x,y,atingiu;
 }Missel;
 
-Missel inicializaMissel(int x,int y);
-Missel inicializaMisselAlien(int x,int y);
+Missel inicializaMissel();
+Missel inicializaMisselAlien();
+
+typedef struct{
+    char formato[28];
+    int altura,largura;
+}NaveMae;
+
+NaveMae inicializaNaveMae();
 

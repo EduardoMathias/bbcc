@@ -1,7 +1,15 @@
 #include "elem.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
+#define ALIEN_1_1 " A AMA/X\\"
+#define ALIEN_1_2 " A AMA{ } "
+#define ALIEN_2_1 ".v_v.}MWM{ / \\ "
+#define ALIEN_2_2 ".v_v.}MWM{ } { "
+#define ALIEN_3_1 " nmn dbMdb_/-\\_"
+#define ALIEN_3_2 " nmn dbMdb |-| "
+#define NAVE_MAE " /MMMMM\\ AMoMoMoMA \\/'-'\\/ "
 
 int inicializa_lista(t_lista *l){
     l->tamanho = 0;
@@ -124,44 +132,65 @@ int remove_item_atual(t_lista *l){
 }
 
 
-Nave inicializaNave(int x, int y){
+Nave inicializaNave(){
 	Nave NovaNave = {
-		" /^\\ ", "MMMMM", x, y
+		" /^\\ ", "MMMMM"
 	};
 	return NovaNave;
 }
-Alien inicializaAlien1(int x,int y){
-	Alien Alien1 = {
-		" A ","AMA","/X\\", x, y, 1};
-	return Alien1;
+Alien inicializaAlien1(){
+    Alien alien1;
+    alien1.forma_inicial = 0;
+	alien1.altura = 3; 
+	alien1.largura = strlen(ALIEN_1_1) / 3;
+	strcpy( alien1.tipo1, ALIEN_1_1 );
+	strcpy( alien1.tipo2, ALIEN_1_2 );
+    return alien1;
 }
-Alien inicializaAlien2(int x,int y){
-	Alien Alien2 = {
-	     ".v_v.","}WMW{"," / \\ ", x, y, 1};
-       return Alien2;
+
+Alien inicializaAlien2(){
+    Alien alien2;
+    alien2.forma_inicial = 0;
+	alien2.altura = 3; 
+	alien2.largura = strlen(ALIEN_2_1) / 3;
+	strcpy( alien2.tipo1, ALIEN_2_1 );
+	strcpy( alien2.tipo2, ALIEN_2_2 );
+    return alien2;
 }
-Alien inicializaAlien3(int x, int y){
-	Alien Alien3 = {
-		" nmn ", "dbMdb", "_/-\\_", x, y, 1};
-	return Alien3;
+Alien inicializaAlien3(){
+    Alien alien3;
+    alien3.forma_inicial = 0;
+    alien3.altura = 3; 
+	alien3.largura = strlen(ALIEN_3_1) / 3;
+	strcpy( alien3.tipo1, ALIEN_3_1 );
+	strcpy( alien3.tipo2, ALIEN_3_2 );
+    return alien3;
 }
-Barreira inicializaBarreira(int x, int y){
+Barreira inicializaBarreira(){
 	Barreira NovaBarreira = {
-		"M", x, y, 0
+		"M"
 	};
 	return NovaBarreira;
 }
 
-Missel inicializaMissel(int x, int y){
+Missel inicializaMissel(){
     Missel NovoMissel ={
-        "|",x,y,0
+        "|"
     };
     return NovoMissel;
 }
 
-Missel inicializaMisselAlien(int x, int y){
+Missel inicializaMisselAlien(){
     Missel NovoMisselAlien = {
-        "$", x,y,0
+        "$"
     };
     return NovoMisselAlien;
+}
+
+NaveMae inicializaNaveMae(){
+    NaveMae navemae;
+    navemae.altura = 3;
+	navemae.largura = strlen(NAVE_MAE) / 3;
+	strcpy( navemae.formato, NAVE_MAE );   
+    return navemae;
 }
