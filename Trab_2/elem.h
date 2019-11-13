@@ -17,6 +17,7 @@ struct t_lista {
 typedef struct t_lista t_lista;
 
 int inicializa_lista(t_lista *l);
+int lista_vazia(t_lista *l);
 int insere_inicio_lista(int tipo, int lin, int col, int velocidade, int condicao, t_lista *l);
 int insere_fim_lista(int tipo, int lin, int col, int velocidade, int condicao, t_lista *l);
 int inicializa_atual_inicio(t_lista *l);
@@ -44,9 +45,20 @@ typedef struct{
 
 Nave inicializaNave();
 
-typedef struct{
-	char bloco[1];
-}Barreira;
+
+typedef struct Bloco
+{
+	int lin;
+	int col;
+	int estado;
+	char forma;
+} Bloco;
+
+typedef struct Barreira
+{
+	int tam;
+	Bloco blocos[22];
+} Barreira;
 
 Barreira inicializaBarreira();
 

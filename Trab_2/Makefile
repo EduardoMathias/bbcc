@@ -1,6 +1,5 @@
-CFLAGS = -Wall -Wextra  -pedantic -fsanitize=address -O3
+CFLAGS = -Wall -Wextra  -pedantic
 CC = gcc
-LDFLAGS =  -fsanitize=address
 LBLIBS = -lncurses
 
 SRC = main.c elem.c 
@@ -10,7 +9,7 @@ EXEC = space-invaders
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
-	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LBLIBS)
+	$(CC) -o $@ $(OBJ) $(LBLIBS)
 
 clean:
 	rm -rf $(OBJ) $(EXEC)

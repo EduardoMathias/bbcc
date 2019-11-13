@@ -10,6 +10,7 @@
 #define ALIEN_3_1 " nmn dbMdb_/-\\_"
 #define ALIEN_3_2 " nmn dbMdb |-| "
 #define NAVE_MAE " /MMMMM\\ AMoMoMoMA \\/'-'\\/ "
+#define BARREIRA " AMMMA AMMMMMAMM   MM"
 
 int inicializa_lista(t_lista *l){
     l->tamanho = 0;
@@ -18,14 +19,16 @@ int inicializa_lista(t_lista *l){
 	return 1;
 }
 
+int lista_vazia(t_lista *l)
+{
+    return l->tamanho == 0 && l->ini == NULL;
+}
+
 int insere_inicio_lista(int tipo, int lin, int col, int velocidade, int condicao, t_lista *l)
 {
-	t_nodo *novo;
-
-	novo = (t_nodo*) malloc(sizeof(t_nodo));
+	t_nodo *novo = malloc(sizeof(t_nodo));
 	if (novo == NULL)
 	{
-		free(novo);
 		return 0;
 	}
 
@@ -41,27 +44,32 @@ int insere_inicio_lista(int tipo, int lin, int col, int velocidade, int condicao
 }
 
 int insere_fim_lista(int tipo, int lin, int col, int velocidade, int condicao, t_lista *l){
-    t_nodo *novo,*aux;
-	novo = malloc(1*sizeof(t_nodo));
-	if (novo == NULL)
-        return 0;
+    t_nodo *novo = (t_nodo*)malloc(sizeof(t_nodo));
+    t_nodo *aux;
+    if (novo == NULL){
+        free(novo);
+        return 0;}
     novo->tipo = tipo;
-	novo->x = lin;
+    novo->x = lin;
 	novo->y = col;
 	novo->velocidade = velocidade;
 	novo->condicao = condicao;
-	novo->prox = NULL;
-	if(l->ini){
-		aux = l->ini;
-		while(aux->prox != NULL){
-			aux = aux->prox;
-		}
-		aux->prox = novo;
-	}
-	else
-		l->ini = novo;
-	l->tamanho++;
-	return 1;
+    novo->prox = NULL;
+    if (lista_vazia(l))
+    {
+        l->ini = novo;
+    }
+    else
+    {
+        aux = l->ini;
+        while (aux->prox != NULL)
+        {
+            aux = aux->prox;
+        }
+        aux->prox = novo;
+    }
+    l->tamanho++;
+    return 1;
 }
 
 int inicializa_atual_inicio(t_lista *l){
@@ -166,12 +174,26 @@ Alien inicializaAlien3(){
 	strcpy( alien3.tipo2, ALIEN_3_2 );
     return alien3;
 }
+
+
 Barreira inicializaBarreira(){
-	Barreira NovaBarreira = {
-		"M"
-	};
-	return NovaBarreira;
+    Barreira barreira;
+	int i_bloco, i_bar, ncol;
+	i_bloco = 0;
+	ncol = strlen(BARREIRA) / 3;
+	for (i_bar = 0; i_bar < strlen(BARREIRA); i_bar++)
+		if (BARREIRA[i_bar] != ' ')
+		{
+			barreira.blocos[i_bloco].forma = BARREIRA[i_bar];
+			barreira.blocos[i_bloco].estado = 1;
+			barreira.blocos[i_bloco].lin = i_bar / ncol;
+			barreira.blocos[i_bloco].col = i_bar % ncol;
+			i_bloco++;
+		}
+	barreira.tam = i_bloco;
+    return barreira;
 }
+
 
 Missel inicializaMissel(){
     Missel NovoMissel ={
