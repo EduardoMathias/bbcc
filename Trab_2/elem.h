@@ -26,6 +26,8 @@ void incrementa_atual(t_lista *l);
 void decrementa_atual(t_lista *l);
 int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *condicao, t_lista *l);
 int remove_item_atual(t_lista *l);
+int anda_item_atual_esquerda(t_lista *l);
+int anda_item_atual_direita(t_lista *l);
 void imprime_lista(t_lista *l);
 
 typedef struct {

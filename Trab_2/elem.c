@@ -118,6 +118,20 @@ int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *con
 	return 1;
 }
 
+int anda_item_atual_esquerda(t_lista *l){
+    if(l->atual == NULL)
+        return 0;
+    l->atual->x--;
+    return 1;
+}
+
+int anda_item_atual_direita(t_lista *l){
+    if(l->atual == NULL)
+        return 0;
+    l->atual->x++;
+    return 1;
+}
+
 int remove_item_atual(t_lista *l){
     t_nodo *elem, *aux;
 	elem = l->ini;

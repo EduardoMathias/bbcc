@@ -1,21 +1,14 @@
 #include <ncurses.h>
 #include <curses.h>
+#include <stdio.h>
 #include <unistd.h>
 #include "elem.h"
 #include <stdlib.h>
 #include <time.h>
 
-int disparado;
-int direction;
-int tick;
+int placar = 0;
 
-
-#define INTERVALO 5000
-
-int insere_navemae(t_lista *l_tela){
-    insere_fim_lista(0, 1, 1, 0, 1, l_tela); 
-	return 1;
-}
+#define INTERVALO 20000
 
 int insere_aliens( t_lista *l_tela ){
 	int i, j;
@@ -38,9 +31,15 @@ int insere_barreiras(t_lista *l_tela){
 }
 
 int insere_nave(t_lista *l_tela){
-	insere_fim_lista(5, 36, 43, 0, 1, l_tela);
+	insere_fim_lista(5, 35, 43, 0, 1, l_tela);
 	return 1;
 }
+
+int insere_navemae(t_lista *l_tela){
+    insere_fim_lista(6, 3, 1, 0, 1, l_tela); 
+	return 1;
+}
+
 
 int inicializa_lista_tela( t_lista *l_tela ){
 	inicializa_lista(l_tela);
@@ -51,6 +50,11 @@ int inicializa_lista_tela( t_lista *l_tela ){
 	return 1;
 }
 
+void DesenhaPlacar(){
+    move(1,50);
+    printw("%07d",placar);
+
+}
 
 void Desenha_Borda(){
     box(stdscr,0,0);
@@ -113,22 +117,27 @@ void Desenha_Barreira(int lin, int col, int num_bar,Barreira *barreiras){
 void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave, NaveMae *navemae){
 	int tipo, lin, col, vel, estado, cont_bar = 0;
 
-	clear();
+    clear();
 	Desenha_Borda();
+    DesenhaPlacar();
 	inicializa_atual_inicio(l_tela);
 	for (int i = 0; i < l_tela->tamanho; i++)
 	{
 		consulta_item_atual(&tipo, &lin, &col, &vel, &estado, l_tela);
-        if(tipo == 5)
-            Desenha_Nave(lin, col, nave);
 		if (tipo <= 3)
 			Desenha_Alien(lin, col, tipo, alien);
 		else if (tipo == 4)
 			Desenha_Barreira(lin, col, cont_bar++, barreiras);
+        else if(tipo == 6)
+            Desenha_NaveMae(lin,col, navemae);
+        else if(tipo == 5)
+            Desenha_Nave(lin, col, nave);
 		incrementa_atual(l_tela);
 	}
 	refresh();
 }
+
+
 
 int main(){
     t_lista l_tela;
@@ -162,25 +171,22 @@ int main(){
     //Barreiras
     for(int b = 0; b < 4; b++)
         barreiras[b] = inicializaBarreira();
-
-    Missel missel = inicializaMissel();
-    Missel misselalien = inicializaMisselAlien();
    
-while(1){
-	/*if(key == ' '){
+while((key = getch())){
+	if(key == ' '){
     }
 	else
 		if(key == KEY_LEFT){
-  		}
+
+  		    }
 	else if (key == KEY_RIGHT){
   	}
 	else if (key == 'q') {
     	endwin();
     	exit(0);
-  	}*/
+  	}
     Desenha_tela(&l_tela, alien, barreiras, &nave, &navemae);
-		
-		usleep(INTERVALO);
+	usleep(INTERVALO);
 	}
 	endwin();
 }
