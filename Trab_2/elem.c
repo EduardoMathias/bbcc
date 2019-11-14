@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#define NAVE_TERRA " /^\\ MMMMM"
 #define ALIEN_1_1 " A AMA/X\\"
 #define ALIEN_1_2 " A AMA{ } "
 #define ALIEN_2_1 ".v_v.}MWM{ / \\ "
@@ -139,11 +140,27 @@ int remove_item_atual(t_lista *l){
 	return 1;
 }
 
+void imprime_lista(t_lista *l)
+{
+    if (!lista_vazia(l))
+    {
+        printf("tam: %d -> ", l->tamanho);
+        t_nodo *atual = l->ini;
+        while (atual->prox != NULL)
+        {
+            printf("%d ", atual->tipo);
+            atual = atual->prox;
+        }
+        printf("%d\n", atual->tipo);
+    }
+}
+
 
 Nave inicializaNave(){
-	Nave NovaNave = {
-		" /^\\ ", "MMMMM"
-	};
+	Nave NovaNave;
+    NovaNave.altura = 2;
+    NovaNave.largura = strlen(NAVE_TERRA)/2;
+    strcpy(NovaNave.forma, NAVE_TERRA);
 	return NovaNave;
 }
 Alien inicializaAlien1(){

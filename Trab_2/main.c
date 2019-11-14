@@ -13,7 +13,7 @@ int tick;
 #define INTERVALO 5000
 
 int insere_navemae(t_lista *l_tela){
-    insere_fim_lista(0, 3, 1, 0, 1, l_tela); 
+    insere_fim_lista(0, 1, 1, 0, 1, l_tela); 
 	return 1;
 }
 
@@ -38,7 +38,7 @@ int insere_barreiras(t_lista *l_tela){
 }
 
 int insere_nave(t_lista *l_tela){
-	insere_fim_lista(5, 35, 43, 0, 1, l_tela);
+	insere_fim_lista(5, 36, 43, 0, 1, l_tela);
 	return 1;
 }
 
@@ -53,20 +53,27 @@ int inicializa_lista_tela( t_lista *l_tela ){
 
 
 void Desenha_Borda(){
-	int i, j;
-	
-	for (i = 0; i < 38; i += 37)
-		for (j = 0; j < 100; j++)
-			{
-				move(i, j);
-				addch('*');
-			}
+    box(stdscr,0,0);
+}
 
-	for (i = 1; i < 37; i++)
-		for (j = 0; j < 100; j += 99)
+void Desenha_NaveMae(int lin, int col, NaveMae *navemae){
+    int i, j;
+	for (i = 0; i < navemae->altura; i++){
+		for (j = 0; j < navemae->largura; j++)
 		{
-			move(i, j);
-			addch('*');
+			move(lin+i, col+j);
+			addch(navemae->formato[navemae->largura*i + j]);
+		}
+    }
+}
+
+void Desenha_Nave(int lin, int col, Nave *nave){
+    int i, j;
+	for (i = 0; i < nave->altura; i++)
+		for (j = 0; j < nave->largura; j++)
+		{
+			move(lin+i, col+j);
+			addch(nave->forma[nave->largura*i + j]);
 		}
 }
 
@@ -103,17 +110,17 @@ void Desenha_Barreira(int lin, int col, int num_bar,Barreira *barreiras){
 }
 
 
-void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave){
+void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave, NaveMae *navemae){
 	int tipo, lin, col, vel, estado, cont_bar = 0;
 
 	clear();
 	Desenha_Borda();
-
 	inicializa_atual_inicio(l_tela);
 	for (int i = 0; i < l_tela->tamanho; i++)
 	{
 		consulta_item_atual(&tipo, &lin, &col, &vel, &estado, l_tela);
-
+        if(tipo == 5)
+            Desenha_Nave(lin, col, nave);
 		if (tipo <= 3)
 			Desenha_Alien(lin, col, tipo, alien);
 		else if (tipo == 4)
@@ -123,25 +130,13 @@ void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave
 	refresh();
 }
 
-void move_aliens(t_lista *l_tela)
-{
-	inicializa_atual_inicio(l_tela);
-	while(l_tela->atual->tipo < 1)
-		incrementa_atual(l_tela);
-	while(l_tela->atual->tipo <= 3)	
-	{
-		incrementa_atual(l_tela);
-	}
-}
-
 int main(){
     t_lista l_tela;
-	Alien alien[3];
+	Alien alien[4];
 	Barreira barreiras[4];
 	int key,ncol,nlin;
     int iter = 1;
     inicializa_lista_tela(&l_tela);
-
 	initscr();
     cbreak();
 	noecho();
@@ -149,25 +144,30 @@ int main(){
     keypad(stdscr, TRUE);
     curs_set(FALSE);
     getmaxyx(stdscr, nlin, ncol);
-    if (nlin < 38 || ncol < 100)
+    if (ncol < 100 || nlin < 38)
 	{
 		endwin();
+        printf("Tamanho errado");
+        printf("%d %d", nlin,ncol);
+        imprime_lista(&l_tela);
 		return 0;
 	}
+    //Naves
+    Nave nave = inicializaNave();
+    NaveMae navemae = inicializaNaveMae();
     //Aliens
-	alien[0] = inicializaAlien1();
-	alien[1] = inicializaAlien2();
-    alien[2] = inicializaAlien3();
+	alien[1] = inicializaAlien1();
+	alien[2] = inicializaAlien2();
+    alien[3] = inicializaAlien3();
     //Barreiras
     for(int b = 0; b < 4; b++)
         barreiras[b] = inicializaBarreira();
-  	 
-    Nave nave = inicializaNave();
+
     Missel missel = inicializaMissel();
     Missel misselalien = inicializaMisselAlien();
    
-while((key = getch())){
-	if(key == ' '){
+while(1){
+	/*if(key == ' '){
     }
 	else
 		if(key == KEY_LEFT){
@@ -177,13 +177,9 @@ while((key = getch())){
 	else if (key == 'q') {
     	endwin();
     	exit(0);
-  	}
-    //Desenha_tela(&l_tela, alien, barreiras, &nave);
+  	}*/
+    Desenha_tela(&l_tela, alien, barreiras, &nave, &navemae);
 		
-		if (iter % 100 == 0)
-			//move_aliens(&l_tela);
-		
-		iter++;
 		usleep(INTERVALO);
 	}
 	endwin();

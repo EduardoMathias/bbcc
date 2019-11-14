@@ -26,6 +26,7 @@ void incrementa_atual(t_lista *l);
 void decrementa_atual(t_lista *l);
 int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *condicao, t_lista *l);
 int remove_item_atual(t_lista *l);
+void imprime_lista(t_lista *l);
 
 typedef struct {
 	char tipo1[28];
@@ -39,8 +40,8 @@ Alien inicializaAlien2();
 Alien inicializaAlien3();
 
 typedef struct{
-	char cima[6];
-	char baixo[6];
+	char forma[28];
+    int altura,largura;
 }Nave;
 
 Nave inicializaNave();
