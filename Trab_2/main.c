@@ -138,7 +138,15 @@ void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave
 	refresh();
 }
 
-
+void AtualizaAliens(t_lista *l_tela){
+    inicializa_atual_inicio(l_tela);
+    incrementa_atual(l_tela);
+    for(int i= 0; i < l_tela->tamanho - 6; i++)
+    {
+        anda_item_atual_direita(l_tela);
+        incrementa_atual(l_tela);
+    }
+}
 
 int main(){
     t_lista l_tela;
@@ -192,6 +200,7 @@ while(1){
     	endwin();
     	exit(0);
   	}
+    AtualizaAliens(&l_tela);
     Desenha_tela(&l_tela, alien, barreiras, &nave, &navemae);
 	usleep(INTERVALO);
 	}
