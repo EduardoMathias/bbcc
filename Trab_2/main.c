@@ -30,15 +30,16 @@ int insere_barreiras(t_lista *l_tela){
 	return 1;
 }
 
+int insere_navemae(t_lista *l_tela){
+    insere_fim_lista(6, 3, 1, 0, 1, l_tela); 
+	return 1;
+}
+
 int insere_nave(t_lista *l_tela){
 	insere_fim_lista(5, 35, 43, 0, 1, l_tela);
 	return 1;
 }
 
-int insere_navemae(t_lista *l_tela){
-    insere_fim_lista(6, 3, 1, 0, 1, l_tela); 
-	return 1;
-}
 
 
 int inicializa_lista_tela( t_lista *l_tela ){
@@ -172,14 +173,20 @@ int main(){
     for(int b = 0; b < 4; b++)
         barreiras[b] = inicializaBarreira();
    
-while((key = getch())){
+while(1){
+    key = getch();
 	if(key == ' '){
     }
 	else
 		if(key == KEY_LEFT){
-
+            inicializa_atual_fim(&l_tela);
+            if(l_tela.atual->y > (2))
+             anda_item_atual_esquerda(&l_tela);
   		    }
 	else if (key == KEY_RIGHT){
+            inicializa_atual_fim(&l_tela);
+            if(l_tela.atual->y < (ncol - 6))
+             anda_item_atual_direita(&l_tela);
   	}
 	else if (key == 'q') {
     	endwin();
