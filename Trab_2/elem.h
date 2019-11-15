@@ -69,7 +69,7 @@ typedef struct Barreira
 Barreira inicializaBarreira();
 
 typedef struct{
-    char tiro[1];
+    char tiro[2];
 }Missel;
 
 Missel inicializaMissel();

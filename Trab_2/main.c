@@ -7,8 +7,9 @@
 #include <time.h>
 
 int placar = 0;
+int disparado, disparado_alien;
 
-#define INTERVALO 20000
+#define INTERVALO 30000
 
 int insere_aliens( t_lista *l_tela ){
 	int i, j;
@@ -42,9 +43,21 @@ int insere_nave(t_lista *l_tela){
 
 int insere_missel(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_fim(l_tela);
-    insere_fim_lista(1,30,l_tela->atual->x +1,0,1,l_tiro);
+    insere_fim_lista(1,33,l_tela->atual->x +1,0,1,l_tiro);
     return 1;
 }
+
+int insere_missel_alien(t_lista *l_tela, t_lista *l_tiro){
+    srand(time(NULL));
+    int r = rand ()% (54 + 1);
+    inicializa_atual_ultimo_alien(l_tela);
+    for(int i = 0; i < r; i++)
+        decrementa_atual(l_tela);
+    insere_fim_lista(1,l_tela->atual->y + 4,l_tela->atual->x +2,0,1,l_tiro);
+    return 1;
+}
+
+
 
 int inicializa_lista_tela( t_lista *l_tela ){
 	inicializa_lista(l_tela);
@@ -58,6 +71,7 @@ int inicializa_lista_tela( t_lista *l_tela ){
 int inicializa_lista_tiro(t_lista *l_tela ,t_lista *l_tiro){
     inicializa_lista(l_tiro);
     insere_missel(l_tela, l_tiro);
+    insere_missel_alien(l_tela, l_tiro);
     return 1;
 }
 
@@ -126,13 +140,27 @@ void Desenha_Barreira(int lin, int col, int num_bar,Barreira *barreiras){
 }
 
 void Desenha_Missel_Nave(t_lista *l_tiro,Missel *missel_nave){
+    if(disparado){
     int tipo, lin, col, vel, estado = 0;
     inicializa_atual_inicio(l_tiro);
     consulta_item_atual(&tipo, &lin, &col, &vel, &estado, l_tiro);
-    move(lin, col);
-    addch(missel_nave->tiro[1]);
+    mvprintw(lin, col,missel_nave->tiro);
+    disparado = 0;}
 
 }
+
+void Desenha_Missel_Alien(t_lista *l_tiro,Missel *missel_alien){
+    if(disparado_alien){
+    int tipo, lin, col, vel, estado = 0;
+    inicializa_atual_inicio(l_tiro);
+    incrementa_atual(l_tiro);
+    consulta_item_atual(&tipo, &lin, &col, &vel, &estado, l_tiro);
+    mvprintw(lin, col,missel_alien->tiro);
+    disparado_alien = 0;}
+
+}
+
+
 
 void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave, NaveMae *navemae){
 	int tipo, lin, col, vel, estado, cont_bar = 0;
@@ -172,7 +200,43 @@ int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     alien[l_tela->atual->tipo].forma_inicial = alien[l_tela->atual->tipo].forma_inicial ? 0: 1;
         return 1;
 }
+void Atualiza_Missel_x(t_lista *l_tela,t_lista *l_tiro){
+    inicializa_atual_fim(l_tela);
+    inicializa_atual_inicio(l_tiro);
+    l_tiro->atual->x= l_tela->atual->x + 1;
+}
 
+void Atualiza_Missel_y(t_lista *l_tiro){
+    inicializa_atual_inicio(l_tiro);
+    if(l_tiro->atual->y <= 1){
+        l_tiro->atual->y = 33;
+    }
+    l_tiro->atual->y -= 0.01;
+}
+
+void Atualiza_MisselAlien(t_lista *l_tela,t_lista *l_tiro){
+    srand(time(NULL));
+    int r = rand ()% (54 + 1);
+    inicializa_atual_ultimo_alien(l_tela);
+    for(int i = 0; i < r; i++)
+        decrementa_atual(l_tela);
+    inicializa_atual_inicio(l_tiro);
+    incrementa_atual(l_tiro);
+    l_tiro->atual->x= l_tela->atual->x + 2;
+    l_tiro->atual->y = l_tela->atual->y + 4;
+
+}
+
+
+
+void Anda_MisselAlien_y(t_lista *l_tiro){
+    inicializa_atual_inicio(l_tiro);
+    incrementa_atual(l_tiro);
+    if(l_tiro->atual->y >= 37){
+        l_tiro->atual->y = 1;
+    }
+    l_tiro->atual->y += 0.01;
+}
 
 int main(){
     t_lista l_tela,l_tiro;
@@ -180,7 +244,8 @@ int main(){
 	Barreira barreiras[4];
 	int key,ncol,nlin;
     int iter = 1;
-    int disparado = 0;
+    disparado = 0;
+    disparado_alien = 0;
     int direcao = 1;
     inicializa_lista_tela(&l_tela);
     inicializa_lista_tiro(&l_tela, &l_tiro);
@@ -211,12 +276,13 @@ int main(){
         barreiras[b] = inicializaBarreira();
     //Misseis
     Missel missel_nave = inicializaMissel();
-   
+    Missel missel_alien = inicializaMisselAlien();
 while(1){
     clear();
     key = getch();
 	if(key == ' '){
         disparado = 1;
+        disparado_alien = 1;
     }
 	else
 		if(key == KEY_LEFT){
@@ -235,11 +301,16 @@ while(1){
   	}
 
     Desenha_tela(&l_tela,alien, barreiras, &nave, &navemae);
-    if(disparado)
-     Desenha_Missel_Nave(&l_tiro,&missel_nave);
+    Atualiza_Missel_x(&l_tela,&l_tiro);
+    Atualiza_MisselAlien(&l_tela, &l_tiro);
+    Desenha_Missel_Nave(&l_tiro,&missel_nave);
+    Desenha_Missel_Alien(&l_tiro, &missel_alien);
+    Atualiza_Missel_y(&l_tiro);
+    Anda_MisselAlien_y(&l_tiro);
+
+
     if(iter%10){
         AtualizaAliens(&l_tela, alien, &direcao);
-       // AtualizaTiro(&l_tiro);
        }
      
     refresh();   
