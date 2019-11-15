@@ -34,8 +34,8 @@ int insere_inicio_lista(int tipo, int lin, int col, int velocidade, int condicao
 	}
 
 	novo->tipo = tipo;
-	novo->x = lin;
-	novo->y = col;
+	novo->x = col;
+	novo->y = lin;
 	novo->velocidade = velocidade;
 	novo->condicao = condicao;
 	novo->prox = l->ini;
@@ -51,8 +51,8 @@ int insere_fim_lista(int tipo, int lin, int col, int velocidade, int condicao, t
         free(novo);
         return 0;}
     novo->tipo = tipo;
-    novo->x = lin;
-	novo->y = col;
+    novo->x = col;
+	novo->y = lin;
 	novo->velocidade = velocidade;
 	novo->condicao = condicao;
     novo->prox = NULL;
@@ -111,8 +111,8 @@ int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *con
     if (l->atual == NULL)
 		return 0;
 	*tipo = l->atual->tipo;
-	*lin = l->atual->x;
-	*col = l->atual->y;
+	*col = l->atual->x;
+	*lin = l->atual->y;
 	*velocidade = l->atual->velocidade;
 	*condicao = l->atual->condicao;
 	return 1;
@@ -121,14 +121,29 @@ int consulta_item_atual(int *tipo, int *lin, int *col, int *velocidade, int *con
 int anda_item_atual_esquerda(t_lista *l){
     if(l->atual == NULL)
         return 0;
-    l->atual->y--;
+    l->atual->x--;
     return 1;
 }
 
 int anda_item_atual_direita(t_lista *l){
     if(l->atual == NULL)
         return 0;
-    l->atual->y++;
+    l->atual->x++;
+    return 1;
+}
+
+int anda_aliens_baixo(t_lista *l){
+    inicializa_atual_ultimo_alien(l);
+    while(l->atual->tipo < 6){
+        l->atual->y= l->atual->y+1;
+        decrementa_atual(l);
+    }
+    return 1;
+}
+int inicializa_atual_ultimo_alien(t_lista *l){
+    inicializa_atual_inicio(l);
+    while(l->atual->prox->tipo != 4)
+        l->atual = l->atual->prox;
     return 1;
 }
 
