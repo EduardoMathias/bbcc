@@ -10,6 +10,7 @@ int placar = 0;
 int disparado, disparado_alien;
 
 #define INTERVALO 30000
+#define EXPLOSAO "\\'/- -/,\\" 
 
 int insere_aliens( t_lista *l_tela ){
 	int i, j;
@@ -160,6 +161,10 @@ void Desenha_Missel_Alien(t_lista *l_tiro,Missel *missel_alien){
 
 }
 
+void Desenha_Explosao(int lin,int col,t_lista *l_tela){
+    mvprintw(lin, col, EXPLOSAO);
+    l_tela->atual->condicao = 3;
+}
 
 
 void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave, NaveMae *navemae){
@@ -171,8 +176,12 @@ void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave
 	for (int i = 0; i < l_tela->tamanho; i++)
 	{
 		consulta_item_atual(&tipo, &lin, &col, &vel, &estado, l_tela);
-		if (tipo <= 3)
-			Desenha_Alien(lin, col, tipo, alien);
+		if (tipo <= 3){
+            if(estado == 1){
+			Desenha_Alien(lin, col, tipo, alien);}
+            if(estado == 2){
+            Desenha_Explosao(lin,col, l_tela);
+            }}
 		else if (tipo == 4)
 			Desenha_Barreira(lin, col, cont_bar++, barreiras);
         else if(tipo == 6)
@@ -183,17 +192,25 @@ void Desenha_tela(t_lista *l_tela, Alien *alien, Barreira *barreiras, Nave *nave
     }
 }
 
+void funcao_Desce(t_lista *l_tela, int *desce){
+    l_tela->atual->y+= *desce;
+
+} 
+
 int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     int limite = 0;
+    int desce = 0;
     inicializa_atual_inicio(l_tela);
     incrementa_atual(l_tela);
     for(int i= 0; i < 55; i++){
     l_tela->atual->x+= *direcao;
-    if(l_tela->atual->x >= 98){
+    if((l_tela->atual->x >= 98) && (l_tela->atual->tipo != 2)){
            limite = 1;
+           desce = 1;
     }
-    if(l_tela->atual->x <= 1){
+    if((l_tela->atual->x <= 1) && (l_tela->atual->tipo != 2)){
         limite = -1;
+        desce = 1;
     }
     alien[1].forma_inicial = alien[1].forma_inicial ? 0: 1;
     alien[2].forma_inicial = alien[2].forma_inicial ? 0: 1;
@@ -232,8 +249,6 @@ void Atualiza_MisselAlien(t_lista *l_tela,t_lista *l_tiro){
 
 }
 
-
-
 void Anda_MisselAlien_y(t_lista *l_tiro){
     inicializa_atual_inicio(l_tiro);
     incrementa_atual(l_tiro);
@@ -242,6 +257,32 @@ void Anda_MisselAlien_y(t_lista *l_tiro){
     }
     l_tiro->atual->y += 0.01;
 }
+
+
+void AtingiuAlien(t_lista *l_tela, t_lista *l_tiro){
+    inicializa_atual_ultimo_alien(l_tela);
+    inicializa_atual_inicio(l_tiro);
+    for(int i= 0; i < 55; i++){
+        if((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
+            if(l_tela->atual->condicao == 1)
+            l_tela->atual->condicao = 2;
+            placar += 1;
+        }
+        decrementa_atual(l_tela);
+    }
+}
+/*void AtingiuBarreira(Barreira *barreiras, t_lista *l_tiro){
+    inicializa_atual_inicio(l_tiro);
+    for(int num_bar = 0; num_bar < 4; num_bar++){
+    int tam = barreiras[num_bar].tam;
+	for (int i = 0; i < tam; i++)
+	{   
+		if(barreiras[num_bar].blocos[i].lin == l_tiro->atual->y && barreiras[num_bar].blocos[i].col == l_tiro->atual->x){
+            barreiras[num_bar].blocos[i].forma = ' ';
+        }
+        }
+    }
+}*/
 
 int main(){
     t_lista l_tela,l_tiro;
@@ -312,6 +353,7 @@ while(1){
     Desenha_Missel_Alien(&l_tiro, &missel_alien);
     Atualiza_Missel_y(&l_tiro);
     Anda_MisselAlien_y(&l_tiro);
+    AtingiuAlien(&l_tela, &l_tiro);
     if(iter % 100)
         AtualizaAliens(&l_tela, alien, &direcao);
      

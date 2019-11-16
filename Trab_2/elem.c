@@ -132,14 +132,7 @@ int anda_item_atual_direita(t_lista *l){
     return 1;
 }
 
-int anda_aliens_baixo(t_lista *l){
-    inicializa_atual_ultimo_alien(l);
-    while(l->atual->tipo < 6){
-        l->atual->y= l->atual->y+1;
-        decrementa_atual(l);
-    }
-    return 1;
-}
+
 int inicializa_atual_ultimo_alien(t_lista *l){
     inicializa_atual_inicio(l);
     while(l->atual->prox->tipo != 4)
