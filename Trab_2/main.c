@@ -187,18 +187,23 @@ int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     int limite = 0;
     inicializa_atual_inicio(l_tela);
     incrementa_atual(l_tela);
-    for(int i= 0; i < 55; i++)
-    {   
-        l_tela->atual->x+= *direcao;
-        incrementa_atual(l_tela);
-        if(l_tela->atual->x >= 97){
+    for(int i= 0; i < 55; i++){
+    l_tela->atual->x+= *direcao;
+    if(l_tela->atual->x >= 98){
            limite = 1;
-        }
     }
-    if(limite)
-        *direcao = *direcao *-1;
-    alien[l_tela->atual->tipo].forma_inicial = alien[l_tela->atual->tipo].forma_inicial ? 0: 1;
-        return 1;
+    if(l_tela->atual->x <= 1){
+        limite = -1;
+    }
+    alien[1].forma_inicial = alien[1].forma_inicial ? 0: 1;
+    alien[2].forma_inicial = alien[2].forma_inicial ? 0: 1;
+    alien[3].forma_inicial = alien[3].forma_inicial ? 0: 1;
+    incrementa_atual(l_tela);}
+    if(limite == 1)
+        *direcao*=-1;
+    if(limite == -1)
+        *direcao*=-1;
+    return 1;
 }
 void Atualiza_Missel_x(t_lista *l_tela,t_lista *l_tiro){
     inicializa_atual_fim(l_tela);
@@ -307,11 +312,8 @@ while(1){
     Desenha_Missel_Alien(&l_tiro, &missel_alien);
     Atualiza_Missel_y(&l_tiro);
     Anda_MisselAlien_y(&l_tiro);
-
-
-    if(iter%10){
+    if(iter % 100)
         AtualizaAliens(&l_tela, alien, &direcao);
-       }
      
     refresh();   
 	usleep(INTERVALO);
