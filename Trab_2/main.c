@@ -9,7 +9,7 @@
 int placar,aliens_mortos = 0;
 int disparado, disparado_alien;
 
-#define INTERVALO 30000
+#define INTERVALO 35000
 #define EXPLOSAO "\\'/- -/,\\" 
 
 int insere_aliens( t_lista *l_tela ){
@@ -204,11 +204,11 @@ int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     incrementa_atual(l_tela);
     for(int i= 0; i < 55; i++){
     l_tela->atual->x+= *direcao;
-    if((l_tela->atual->x >= 98) && (l_tela->atual->tipo != 2)){
+    if((l_tela->atual->x >= 98) && (l_tela->atual->tipo == 1)){
            limite = 1;
            desce = 1;
     }
-    if((l_tela->atual->x <= 1) && (l_tela->atual->tipo != 2)){
+    if((l_tela->atual->x <= 1) && (l_tela->atual->tipo == 1)){
         limite = -1;
         desce = 1;
     }
@@ -220,6 +220,17 @@ int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
         *direcao*=-1;
     if(limite == -1)
         *direcao*=-1;
+    
+    inicializa_atual_inicio(l_tela);
+    incrementa_atual(l_tela);
+    for(int i = 0; i < 55; i++){
+        l_tela->atual->y+=desce;
+        incrementa_atual(l_tela);
+    }
+    inicializa_atual_ultimo_alien(l_tela);
+    if(l_tela->atual->y >= 35){
+        endwin();
+        exit(1);}
     return 1;
 }
 
@@ -275,6 +286,7 @@ void AtingiuAlien(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_ultimo_alien(l_tela);
     inicializa_atual_inicio(l_tiro);
     for(int i= 0; i < 55; i++){
+    if(l_tiro->atual->tipo == 1){
         if((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
             if(l_tela->atual->condicao == 1){
             l_tela->atual->condicao = 2;
@@ -283,9 +295,10 @@ void AtingiuAlien(t_lista *l_tela, t_lista *l_tiro){
         }
         decrementa_atual(l_tela);
     }
+    }
 }
 
-void AtingiuNave(t_lista *l_tela, t_lista *l_tiro){
+void Atingiu_Tiro_Nave(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_fim(l_tela);
     inicializa_atual_inicio(l_tiro);
     incrementa_atual(l_tiro);
@@ -293,6 +306,7 @@ void AtingiuNave(t_lista *l_tela, t_lista *l_tiro){
             endwin();
     }
 }
+
 
 void AtingiuNaveMae(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_inicio(l_tela);
@@ -316,6 +330,18 @@ void AtingiuBarreira(Barreira *barreiras, t_lista *l_tiro){
             atual.forma = '0';
         }
     }
+    }
+}
+
+void Atingiu_Alien_Fileira_Nave(t_lista *l_tela){
+    inicializa_atual_inicio(l_tela);
+    incrementa_atual(l_tela);
+    for(int i= 0; i < 55; i++){
+            incrementa_atual(l_tela);
+    }
+    if(l_tela->atual->y >= 32){
+        endwin();
+        exit(1);
     }
 }
 
@@ -392,6 +418,8 @@ while(1){
     AtingiuAlien(&l_tela, &l_tiro);
     AtingiuNaveMae(&l_tela, &l_tiro);
     AtingiuBarreira(barreiras, &l_tiro);
+    Atingiu_Tiro_Nave(&l_tela,&l_tiro);
+    Atingiu_Alien_Fileira_Nave(&l_tela);
     if(iter % (100 - aliens_mortos)){
         AtualizaAliens(&l_tela, alien, &direcao);
         disparado_alien = 1;}
