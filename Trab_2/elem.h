@@ -53,19 +53,13 @@ Nave inicializaNave();
 
 typedef struct Bloco
 {
-	int lin;
-	int col;
-	int estado;
-	char forma;
+	int altura;
+	int largura;
+	char formato[2];
 } Bloco;
 
-typedef struct Barreira
-{
-	int tam;
-	Bloco blocos[22];
-} Barreira;
-
-Barreira inicializaBarreira();
+Bloco inicializaBloco1();
+Bloco inicializaBloco2();
 
 typedef struct{
     char tiro[2];

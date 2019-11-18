@@ -12,6 +12,7 @@
 #define ALIEN_3_2 " nmn dbMdb |-| "
 #define NAVE_MAE " /MMMMM\\ AMoMoMoMA \\/'-'\\/ "
 #define BARREIRA " AMMMA AMMMMMAMM   MM"
+#define BLOCOS     "AM"
 
 int inicializa_lista(t_lista *l){
     l->tamanho = 0;
@@ -214,23 +215,26 @@ Alien inicializaAlien3(){
     return alien3;
 }
 
+Bloco inicializaBloco1(){
+    char str_bloco[2];
+    Bloco bloco1;
+    str_bloco[0] = BLOCOS[0];
+    str_bloco[1] = '\0';
+    strcpy(bloco1.formato, str_bloco);
+    bloco1.altura = 1;
+    bloco1.largura = 1;
+    return bloco1;
+}
 
-Barreira inicializaBarreira(){
-    Barreira barreira;
-	int i_bloco, i_bar, ncol;
-	i_bloco = 0;
-	ncol = strlen(BARREIRA) / 3;
-	for (i_bar = 0; i_bar < strlen(BARREIRA); i_bar++)
-		if (BARREIRA[i_bar] != ' ')
-		{
-			barreira.blocos[i_bloco].forma = BARREIRA[i_bar];
-			barreira.blocos[i_bloco].estado = 1;
-			barreira.blocos[i_bloco].lin = i_bar / ncol;
-			barreira.blocos[i_bloco].col = i_bar % ncol;
-			i_bloco++;
-		}
-	barreira.tam = i_bloco;
-    return barreira;
+Bloco inicializaBloco2(){ 
+    char str_bloco[2];
+    Bloco bloco2;
+    str_bloco[0] = BLOCOS[1];
+    str_bloco[1] = '\0';
+    strcpy(bloco2.formato, str_bloco);
+    bloco2.altura = 1;
+    bloco2.largura = 1;
+    return bloco2;
 }
 
 
