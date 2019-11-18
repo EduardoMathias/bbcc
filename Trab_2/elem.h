@@ -30,6 +30,7 @@ int anda_item_atual_esquerda(t_lista *l);
 int anda_item_atual_direita(t_lista *l);
 int inicializa_atual_ultimo_alien(t_lista *l);
 void imprime_lista(t_lista *l);
+void destroi_lista(t_lista *l);
 
 
 typedef struct {

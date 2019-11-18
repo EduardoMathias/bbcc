@@ -179,6 +179,21 @@ void imprime_lista(t_lista *l)
 }
 
 
+void destroi_lista(t_lista *l)
+{
+    t_nodo *aux = l->ini;
+    t_nodo *prox;
+    while (aux != NULL)
+    {
+        prox = aux->prox;
+        free(aux);
+        aux = prox;
+    }
+    l->ini = NULL;
+    l->tamanho = 0;
+}
+
+
 Nave inicializaNave(){
 	Nave NovaNave;
     NovaNave.altura = 2;

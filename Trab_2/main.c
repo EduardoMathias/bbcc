@@ -8,9 +8,9 @@
 #include <string.h>
 
 int placar,aliens_mortos = 0;
-int disparado, disparado_alien;
+int disparado, disparado_alien,partida;
 
-#define INTERVALO 40000
+#define INTERVALO 35000
 #define EXPLOSAO "\\'/- -/,\\"
 #define BARREIRA   " AMMMA AMMMMMAMM   MM"
 #define BLOCOS     "AM" 
@@ -18,13 +18,13 @@ int disparado, disparado_alien;
 int insere_aliens( t_lista *l_tela ){
 	int i, j;
 	for (i = 0; i < 11; i++)
-		insere_fim_lista(1, 7, (5 + 7*i), 0, 1, l_tela); 	
+		insere_fim_lista(1, 7, (5 + 7*i), 0+partida, 1, l_tela); 	
 	for (i = 0; i < 2; i++)
 		for (j = 0; j < 11; j++)
-			insere_fim_lista(2, (11 + 4*i), (4 + 7*j), 0, 1, l_tela); 
+			insere_fim_lista(2, (11 + 4*i), (4 + 7*j), 0+partida, 1, l_tela); 
 	for (i = 0; i < 2; i++)
 		for (j = 0; j < 11; j++)
-			insere_fim_lista(3, (19 + 4*i), (4 + 7*j), 0, 1, l_tela);
+			insere_fim_lista(3, (19 + 4*i), (4 + 7*j), 0+partida, 1, l_tela);
 	return 1;
 }
 
@@ -241,10 +241,6 @@ void Desenha_tela(t_lista *l_tela, Alien *alien, Bloco *bloco1, Bloco *bloco2, N
     }
 }
 
-void funcao_Desce(t_lista *l_tela, int *desce){
-    l_tela->atual->y+= *desce;
-
-} 
 
 int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     int limite = 0;
@@ -408,6 +404,14 @@ void Atingiu__TiroALien_Barreira(t_lista *l_tela, t_lista *l_tiro){
             incrementa_atual(l_tela);}
 }
 
+void Recomecar(t_lista*l_tela,t_lista*l_tiro){
+    destroi_lista(l_tela);
+    destroi_lista(l_tiro);
+    inicializa_lista_tela(l_tela);
+    inicializa_lista_tiro(l_tela, l_tiro);
+    partida++;
+}
+
 int main(){
     t_lista l_tela,l_tiro;
 	Alien alien[4];
@@ -419,6 +423,7 @@ int main(){
     disparado_alien = 0;
     int anda = 1;
     int direcao = 1;
+    partida = 0;
     inicializa_lista_tela(&l_tela);
     inicializa_lista_tiro(&l_tela, &l_tiro);
 	initscr();
@@ -484,14 +489,15 @@ while(1){
     Atingiu_Alien_Fileira_Nave(&l_tela);
     Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
-    if(iter % (1000 - aliens_mortos)){
+    if(iter % (50000 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
         disparado_alien = 1;}
     if(iter % 50000){
         AtualizaNaveMae(&l_tela, &anda);
     }
      if(aliens_mortos == 55){
-         endwin();
+         clear();
+         Recomecar(&l_tela,&l_tiro);
      }
     refresh();   
 	usleep(INTERVALO);
