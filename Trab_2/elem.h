@@ -12,6 +12,7 @@ typedef struct t_nodo t_nodo;
 struct t_lista {
     t_nodo *ini;
     t_nodo *atual;
+    t_nodo *auxiliar;
     int tamanho;
 };
 typedef struct t_lista t_lista;
@@ -29,6 +30,10 @@ int remove_item_atual(t_lista *l);
 int anda_item_atual_esquerda(t_lista *l);
 int anda_item_atual_direita(t_lista *l);
 int inicializa_atual_ultimo_alien(t_lista *l);
+int inicializa_auxiliar_inicio(t_lista *l);
+int inicializa_auxiliar_fim(t_lista *l);
+int incrementa_auxiliar(t_lista *l);
+int inicializa_auxiliar_primeira_barreira(t_lista *l);
 void imprime_lista(t_lista *l);
 void destroi_lista(t_lista *l);
 

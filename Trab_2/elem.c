@@ -18,6 +18,7 @@ int inicializa_lista(t_lista *l){
     l->tamanho = 0;
 	l->ini = NULL;
     l->atual = NULL;
+    l->auxiliar = NULL;
 	return 1;
 }
 
@@ -162,6 +163,40 @@ int remove_item_atual(t_lista *l){
 	l->tamanho--;
 	return 1;
 }
+
+int inicializa_auxiliar_inicio(t_lista *l){
+    l->auxiliar = l->ini;
+	return 1;
+}
+
+int inicializa_auxiliar_fim(t_lista *l){
+    t_nodo*aux;
+    if(l->ini){
+		aux = l->ini;
+		while(aux->prox != NULL){
+			aux = aux->prox;
+		}
+		l->auxiliar = aux;
+	}
+    else 
+        l->auxiliar = l->ini;
+    return 1;
+}
+
+int incrementa_auxiliar(t_lista *l){
+     if(l->auxiliar != NULL)
+        l->auxiliar = l->auxiliar->prox;
+    return 1;
+}
+
+int inicializa_auxiliar_primeira_barreira(t_lista *l){
+    inicializa_auxiliar_inicio(l);
+    while(l->auxiliar->prox->tipo != 4)
+        l->auxiliar = l->auxiliar->prox;
+    l->auxiliar = l->auxiliar->prox;
+    return 1;
+}
+
 
 void imprime_lista(t_lista *l)
 {

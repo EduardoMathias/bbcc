@@ -364,16 +364,14 @@ void AtingiuNaveMae(t_lista *l_tela, t_lista *l_tiro){
 }
 
 void Atingiu_Alien_Fileira_Nave(t_lista *l_tela){
-    inicializa_atual_inicio(l_tela);
-    incrementa_atual(l_tela);
+    inicializa_auxiliar_fim(l_tela);
+    inicializa_atual_ultimo_alien(l_tela);
     for(int i= 0; i < 55; i++){
-            incrementa_atual(l_tela);
+         if(l_tela->atual->y +2 == l_tela->auxiliar->y){
+            endwin();
+            exit(1);}
+        decrementa_atual(l_tela);}
     }
-    if(l_tela->atual->y >= 32){
-        endwin();
-        exit(1);
-    }
-}
 
 void Atingiu__TiroNave_Barreira(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_ultimo_alien(l_tela);
@@ -402,6 +400,20 @@ void Atingiu__TiroALien_Barreira(t_lista *l_tela, t_lista *l_tiro){
             l_tela->atual->condicao = 2;
             }}
             incrementa_atual(l_tela);}
+}
+
+void Raspou_Alien_Barreira(t_lista *l_tela){
+    inicializa_auxiliar_primeira_barreira(l_tela);
+    for(int i = 0; i < 64; i++){
+        inicializa_atual_ultimo_alien(l_tela);
+        for(int j= 0; j < 55; j++){
+            if((l_tela->atual->x == l_tela->auxiliar->x) && (l_tela->atual->y+2 == l_tela->auxiliar->y)){
+                if(l_tela->atual->condicao != 2)
+                    l_tela->auxiliar->condicao = 2;}
+            decrementa_atual(l_tela);
+        }
+        incrementa_auxiliar(l_tela);
+    }
 }
 
 void Recomecar(t_lista*l_tela,t_lista*l_tiro){
@@ -489,6 +501,7 @@ while(1){
     Atingiu_Alien_Fileira_Nave(&l_tela);
     Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
+    Raspou_Alien_Barreira(&l_tela);
     if(iter % (50000 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
         disparado_alien = 1;}
