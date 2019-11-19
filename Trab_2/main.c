@@ -114,6 +114,7 @@ void DesenhaPlacar(){
 }
 
 void Desenha_Borda(){
+    resize_term(38, 100);
     box(stdscr,0,0);
 }
 
@@ -249,7 +250,7 @@ int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     incrementa_atual(l_tela);
     for(int i= 0; i < 55; i++){
     l_tela->atual->x+= *direcao;
-    if((l_tela->atual->x >= 98) && (l_tela->atual->tipo == 1)){
+    if((l_tela->atual->x >= 97) && (l_tela->atual->tipo == 1)){
            limite = 1;
            desce = 1;
     }
@@ -480,7 +481,7 @@ while(1){
   		    }
 	else if (key == KEY_RIGHT){
             inicializa_atual_fim(&l_tela);
-            if(l_tela.atual->x < (ncol - 6))
+            if(l_tela.atual->x < (94))
              anda_item_atual_direita(&l_tela);
   	}
 	else if (key == 'q') {
@@ -502,10 +503,10 @@ while(1){
     Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
     Raspou_Alien_Barreira(&l_tela);
-    if(iter % (50000 - aliens_mortos - l_tela.ini->prox->velocidade)){
+    if(iter % (8000 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
         disparado_alien = 1;}
-    if(iter % 50000){
+    if(iter % 5000){
         AtualizaNaveMae(&l_tela, &anda);
     }
      if(aliens_mortos == 55){
