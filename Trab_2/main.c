@@ -114,11 +114,13 @@ void DesenhaPlacar(){
 }
 
 void Desenha_Borda(){
+    wattron(stdscr, COLOR_PAIR(2));
     resize_term(38, 100);
     box(stdscr,0,0);
 }
 
 void Desenha_NaveMae(int lin, int col, NaveMae *navemae){
+    wattron(stdscr, COLOR_PAIR(1));
     int i, j;
 	for (i = 0; i < navemae->altura; i++){
 		for (j = 0; j < navemae->largura; j++)
@@ -188,6 +190,7 @@ void Desenha_Bloco2(int lin, int col,Bloco *bloco2){
 }
 
 void Desenha_Missel_Nave(t_lista *l_tiro,Missel *missel_nave){
+    wattron(stdscr, COLOR_PAIR(2));
     if(disparado){
     int tipo, lin, col, vel, estado = 0;
     inicializa_atual_inicio(l_tiro);
@@ -197,6 +200,7 @@ void Desenha_Missel_Nave(t_lista *l_tiro,Missel *missel_nave){
 }
 
 void Desenha_Missel_Alien(t_lista *l_tiro,Missel *missel_alien){
+    wattron(stdscr, COLOR_PAIR(2));
     if(disparado_alien){
     int tipo, lin, col, vel, estado = 0;
     inicializa_atual_inicio(l_tiro);
@@ -297,8 +301,9 @@ void Atualiza_Missel_x(t_lista *l_tela,t_lista *l_tiro){
 void Atualiza_Missel_y(t_lista *l_tiro){
     inicializa_atual_inicio(l_tiro);
     if(l_tiro->atual->y <= 0){
-        l_tiro->atual->y = 35;
+        l_tiro->atual->y = 37;
         disparado = 0;
+
     }
     l_tiro->atual->y -= 0.01;
 }
@@ -320,8 +325,8 @@ void Anda_MisselAlien_y(t_lista *l_tiro){
     inicializa_atual_inicio(l_tiro);
     incrementa_atual(l_tiro);
     if(l_tiro->atual->y >= 38){
-        disparado_alien = 0;
         l_tiro->atual->y = 1;
+        disparado_alien = 0;
     }
     l_tiro->atual->y += 1;
 }
@@ -383,6 +388,7 @@ void Atingiu__TiroNave_Barreira(t_lista *l_tela, t_lista *l_tiro){
      if(l_tela->atual->condicao != 2){
         if((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
             l_tela->atual->condicao = 2;
+            disparado = 0;
             }}
             incrementa_atual(l_tela);
     }
@@ -399,6 +405,7 @@ void Atingiu__TiroALien_Barreira(t_lista *l_tela, t_lista *l_tiro){
      if(l_tela->atual->condicao != 2){
         if((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
             l_tela->atual->condicao = 2;
+            disparado_alien = 0;
             }}
             incrementa_atual(l_tela);}
 }
@@ -454,6 +461,10 @@ int main(){
         imprime_lista(&l_tela);
 		return 0;
 	}
+    start_color();
+    use_default_colors();
+    init_pair(1, COLOR_GREEN, -1);
+    init_pair(2, COLOR_WHITE, -1);
     //Naves
     Nave nave = inicializaNave();
     NaveMae navemae = inicializaNaveMae();
