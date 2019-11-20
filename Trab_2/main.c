@@ -77,7 +77,7 @@ int insere_nave(t_lista *l_tela){
 
 int insere_missel(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_fim(l_tela);
-    insere_fim_lista(1,33,l_tela->atual->x +1,0,1,l_tiro);
+    insere_fim_lista(1,37,l_tela->atual->x +1,0,1,l_tiro);
     return 1;
 }
 
@@ -254,7 +254,7 @@ int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     incrementa_atual(l_tela);
     for(int i= 0; i < 55; i++){
     l_tela->atual->x+= *direcao;
-    if((l_tela->atual->x >= 97) && (l_tela->atual->tipo == 1)){
+    if((l_tela->atual->x >= 95) && (l_tela->atual->tipo == 1)){
            limite = 1;
            desce = 1;
     }
@@ -293,12 +293,14 @@ int AtualizaNaveMae(t_lista *l_tela,int *anda){
 }
 
 void Atualiza_Missel_x(t_lista *l_tela,t_lista *l_tiro){
+    if(disparado != 0){
     inicializa_atual_fim(l_tela);
     inicializa_atual_inicio(l_tiro);
     l_tiro->atual->x= l_tela->atual->x + 1;
-}
+}}
 
 void Atualiza_Missel_y(t_lista *l_tiro){
+    if(disparado != 0){
     inicializa_atual_inicio(l_tiro);
     if(l_tiro->atual->y <= 0){
         l_tiro->atual->y = 37;
@@ -306,7 +308,7 @@ void Atualiza_Missel_y(t_lista *l_tiro){
 
     }
     l_tiro->atual->y -= 0.01;
-}
+}}
 
 void Atualiza_MisselAlien(t_lista *l_tela,t_lista *l_tiro){
     srand(time(NULL));
@@ -440,7 +442,7 @@ int main(){
 	Bloco bloco1;
     Bloco bloco2;
 	int key,ncol,nlin;
-    int iter = 1;
+    int iter,iter_alien = 1;
     disparado = 0;
     disparado_alien = 0;
     int anda = 1;
@@ -522,6 +524,9 @@ while(1){
             disparado_alien = 1;
         iter = 1;
         }
+    if(iter_alien > 30){
+        disparado_alien = 1;
+        iter_alien = 0;}
     if(iter % 5000){
         AtualizaNaveMae(&l_tela, &anda);
     }
