@@ -433,6 +433,7 @@ void Recomecar(t_lista*l_tela,t_lista*l_tiro){
     destroi_lista(l_tiro);
     inicializa_lista_tela(l_tela);
     inicializa_lista_tiro(l_tela, l_tiro);
+    aliens_mortos = 0;
     partida++;
 }
 
@@ -518,7 +519,7 @@ while(1){
     Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
     Raspou_Alien_Barreira(&l_tela);
-    if(iter > (15 - aliens_mortos - l_tela.ini->prox->velocidade)){
+    if(iter > (110 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
         if(disparado_alien ==  0)
             disparado_alien = 1;
@@ -531,7 +532,6 @@ while(1){
         AtualizaNaveMae(&l_tela, &anda);
     }
      if(aliens_mortos == 55){
-         clear();
          Recomecar(&l_tela,&l_tiro);
      }
     refresh();   
