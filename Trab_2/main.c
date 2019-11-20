@@ -254,11 +254,11 @@ int AtualizaAliens(t_lista *l_tela, Alien *alien, int *direcao){
     incrementa_atual(l_tela);
     for(int i= 0; i < 55; i++){
     l_tela->atual->x+= *direcao;
-    if((l_tela->atual->x >= 95) && (l_tela->atual->tipo == 1)){
+    if((l_tela->atual->x >= 95) && (l_tela->atual->condicao != 3)){
            limite = 1;
            desce = 1;
     }
-    if((l_tela->atual->x <= 1) && (l_tela->atual->tipo == 1)){
+    if((l_tela->atual->x <= 1) && (l_tela->atual->condicao != 3)){
         limite = -1;
         desce = 1;
     }
