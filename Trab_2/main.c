@@ -519,7 +519,7 @@ while(1){
     Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
     Raspou_Alien_Barreira(&l_tela);
-    if(iter > (110 - aliens_mortos - l_tela.ini->prox->velocidade)){
+    if(iter > (70 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
         if(disparado_alien ==  0)
             disparado_alien = 1;
