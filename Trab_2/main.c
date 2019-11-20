@@ -10,7 +10,7 @@
 int placar,aliens_mortos = 0;
 int disparado, disparado_alien,partida;
 
-#define INTERVALO 35000
+#define INTERVALO 38000
 #define EXPLOSAO "\\'/- -/,\\"
 #define BARREIRA   " AMMMA AMMMMMAMM   MM"
 #define BLOCOS     "AM" 
@@ -337,16 +337,18 @@ void AtingiuAlien(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_inicio(l_tiro);
     for(int i= 0; i < 55; i++){
     if(l_tiro->atual->tipo == 1){
-        if((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
+        int meio = l_tela->atual->x;
+        if((meio - 2  <= l_tiro->atual->x) &&(meio + 2 >= l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
             if(l_tela->atual->condicao == 1){
             l_tela->atual->condicao = 2;
             placar += 1;
+            l_tiro->atual->y = 37;
+            disparado = 0;
             aliens_mortos++;}
-        }
+        }}
         decrementa_atual(l_tela);
     }
     }
-}
 
 void Atingiu_Tiro_Nave(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_fim(l_tela);
@@ -403,7 +405,7 @@ void Atingiu__TiroALien_Barreira(t_lista *l_tela, t_lista *l_tiro){
     while (l_tela->atual->tipo <= 5)
     {
      if(l_tela->atual->condicao != 2){
-        if((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
+        if(((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)) || ((l_tela->atual->x+1 == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y))){
             l_tela->atual->condicao = 2;
             disparado_alien = 0;
             }}
@@ -514,9 +516,12 @@ while(1){
     Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
     Raspou_Alien_Barreira(&l_tela);
-    if(iter % (8000 - aliens_mortos - l_tela.ini->prox->velocidade)){
+    if(iter > (15 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
-        disparado_alien = 1;}
+        if(disparado_alien ==  0)
+            disparado_alien = 1;
+        iter = 1;
+        }
     if(iter % 5000){
         AtualizaNaveMae(&l_tela, &anda);
     }
