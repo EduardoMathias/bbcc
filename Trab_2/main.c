@@ -375,7 +375,7 @@ void Atingiu_Tiro_Canhao(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_inicio(l_tiro);
     incrementa_atual(l_tiro);
     int meio = l_tela->atual->x;
-    if((meio - 2  <= l_tiro->atual->x) && (meio + 2 >= l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
+    if((meio - 2  <= l_tiro->atual->x) && (meio + 1 >= l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
             endwin();
             exit(1);
     }
