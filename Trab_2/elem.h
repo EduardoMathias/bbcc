@@ -52,9 +52,9 @@ Alien inicializaAlien3();
 typedef struct{
 	char forma[28];
     int altura,largura;
-}Nave;
+}Canhao;
 
-Nave inicializaNave();
+Canhao inicializaCanhao();
 
 
 typedef struct Bloco

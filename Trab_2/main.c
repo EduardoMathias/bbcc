@@ -86,7 +86,7 @@ int insere_navemae(t_lista *l_tela){
 	return 1;
 }
 
-int insere_nave(t_lista *l_tela){
+int insere_canhao(t_lista *l_tela){
 	insere_fim_lista(6, 35, 43, 0, 1, l_tela);
 	return 1;
 }
@@ -109,7 +109,7 @@ int inicializa_lista_tela( t_lista *l_tela ){
 	insere_navemae(l_tela);
 	insere_aliens(l_tela);
 	insere_barreiras(l_tela);
-	insere_nave(l_tela);
+	insere_canhao(l_tela);
 	return 1;
 }
 
@@ -144,13 +144,13 @@ void Desenha_NaveMae(int lin, int col, NaveMae *navemae){
     }
 }
 
-void Desenha_Nave(int lin, int col, Nave *nave){
+void Desenha_Canhao(int lin, int col, Canhao *canhao){
     int i, j;
-	for (i = 0; i < nave->altura; i++)
-		for (j = 0; j < nave->largura; j++)
+	for (i = 0; i < canhao->altura; i++)
+		for (j = 0; j < canhao->largura; j++)
 		{
 			move(lin+i, col+j);
-			addch(nave->forma[nave->largura*i + j]);
+			addch(canhao->forma[canhao->largura*i + j]);
 		}
 }
 
@@ -203,13 +203,13 @@ void Desenha_Bloco2(int lin, int col,Bloco *bloco2){
     }
 }
 
-void Desenha_Missel_Nave(t_lista *l_tiro,Missel *missel_nave){
+void Desenha_Missel_Canhao(t_lista *l_tiro,Missel *missel_canhao){
     wattron(stdscr, COLOR_PAIR(2));
     if(disparado){
     int tipo, lin, col, vel, estado = 0;
     inicializa_atual_inicio(l_tiro);
     consulta_item_atual(&tipo, &lin, &col, &vel, &estado, l_tiro);
-    mvprintw(lin, col,missel_nave->tiro);}
+    mvprintw(lin, col,missel_canhao->tiro);}
 
 }
 
@@ -230,7 +230,7 @@ void Desenha_Explosao(int lin,int col,t_lista *l_tela){
 }
 
 
-void Desenha_tela(t_lista *l_tela, Alien *alien, Bloco *bloco1, Bloco *bloco2, Nave *nave, NaveMae *navemae){
+void Desenha_tela(t_lista *l_tela, Alien *alien, Bloco *bloco1, Bloco *bloco2, Canhao *canhao, NaveMae *navemae){
 	int tipo, lin, col, vel, estado= 0;
 
 	Desenha_Borda();
@@ -255,7 +255,7 @@ void Desenha_tela(t_lista *l_tela, Alien *alien, Bloco *bloco1, Bloco *bloco2, N
             if(estado == 1)
                 Desenha_NaveMae(lin,col, navemae);}
         else if(tipo == 6)
-            Desenha_Nave(lin, col, nave);
+            Desenha_Canhao(lin, col, canhao);
 		incrementa_atual(l_tela);
     }
 }
@@ -370,7 +370,7 @@ void AtingiuAlien(t_lista *l_tela, t_lista *l_tiro){
     }
     }
 
-void Atingiu_Tiro_Nave(t_lista *l_tela, t_lista *l_tiro){
+void Atingiu_Tiro_Canhao(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_fim(l_tela);
     inicializa_atual_inicio(l_tiro);
     incrementa_atual(l_tiro);
@@ -403,7 +403,7 @@ void AtingiuNaveMae(t_lista *l_tela, t_lista *l_tiro){
 }
 }
 
-void Atingiu_Alien_Fileira_Nave(t_lista *l_tela){
+void Atingiu_Alien_Fileira_Canhao(t_lista *l_tela){
     inicializa_auxiliar_fim(l_tela);
     inicializa_atual_ultimo_alien(l_tela);
     for(int i= 0; i < 55; i++){
@@ -413,7 +413,7 @@ void Atingiu_Alien_Fileira_Nave(t_lista *l_tela){
         decrementa_atual(l_tela);}
     }
 
-void Atingiu__TiroNave_Barreira(t_lista *l_tela, t_lista *l_tiro){
+void Atingiu__TiroCanhao_Barreira(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_ultimo_alien(l_tela);
     incrementa_atual(l_tela);
     inicializa_atual_inicio(l_tiro);
@@ -499,8 +499,8 @@ int main(){
     use_default_colors();
     init_pair(1, COLOR_GREEN, -1);
     init_pair(2, COLOR_WHITE, -1);
-    //Naves
-    Nave nave = inicializaNave();
+    //Canhao
+    Canhao canhao = inicializaCanhao();
     NaveMae navemae = inicializaNaveMae();
     //Aliens
 	alien[1] = inicializaAlien1();
@@ -510,7 +510,7 @@ int main(){
     bloco1 = inicializaBloco1();
     bloco2 = inicializaBloco2();
     //Misseis
-    Missel missel_nave = inicializaMissel();
+    Missel missel_canhao = inicializaMissel();
     Missel missel_alien = inicializaMisselAlien();
 while(1){
     clear();
@@ -534,18 +534,18 @@ while(1){
     	exit(0);
   	}
 
-    Desenha_tela(&l_tela,alien,&bloco1, &bloco2, &nave, &navemae);
+    Desenha_tela(&l_tela,alien,&bloco1, &bloco2, &canhao, &navemae);
     Atualiza_Missel_x(&l_tela,&l_tiro);
     Atualiza_MisselAlien(&l_tela, &l_tiro);
-    Desenha_Missel_Nave(&l_tiro,&missel_nave);
+    Desenha_Missel_Canhao(&l_tiro,&missel_canhao);
     Desenha_Missel_Alien(&l_tiro, &missel_alien);
     Atualiza_Missel_y(&l_tiro);
     Anda_MisselAlien_y(&l_tiro);
     AtingiuAlien(&l_tela, &l_tiro);
     AtingiuNaveMae(&l_tela, &l_tiro);
-    Atingiu_Tiro_Nave(&l_tela,&l_tiro);
-    Atingiu_Alien_Fileira_Nave(&l_tela);
-    Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
+    Atingiu_Tiro_Canhao(&l_tela,&l_tiro);
+    Atingiu_Alien_Fileira_Canhao(&l_tela);
+    Atingiu__TiroCanhao_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
     Atingiu_Tiro_Tiro(&l_tiro);
     Raspou_Alien_Barreira(&l_tela);

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define NAVE_TERRA " /^\\ MMMMM"
+#define Canhao_TERRA " /^\\ MMMMM"
 #define ALIEN_1_1 " A AMA/X\\"
 #define ALIEN_1_2 " A AMA{ } "
 #define ALIEN_2_1 ".v_v.}MWM{ / \\ "
@@ -229,12 +229,12 @@ void destroi_lista(t_lista *l)
 }
 
 
-Nave inicializaNave(){
-	Nave NovaNave;
-    NovaNave.altura = 2;
-    NovaNave.largura = strlen(NAVE_TERRA)/2;
-    strcpy(NovaNave.forma, NAVE_TERRA);
-	return NovaNave;
+Canhao inicializaCanhao(){
+	Canhao NovaCanhao;
+    NovaCanhao.altura = 2;
+    NovaCanhao.largura = strlen(Canhao_TERRA)/2;
+    strcpy(NovaCanhao.forma, Canhao_TERRA);
+	return NovaCanhao;
 }
 Alien inicializaAlien1(){
     Alien alien1;
