@@ -361,8 +361,10 @@ void Atingiu_Tiro_Nave(t_lista *l_tela, t_lista *l_tiro){
     inicializa_atual_fim(l_tela);
     inicializa_atual_inicio(l_tiro);
     incrementa_atual(l_tiro);
-    if((l_tela->atual->x == l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
+    int meio = l_tela->atual->x;
+    if((meio - 2  <= l_tiro->atual->x) && (meio + 2 >= l_tiro->atual->x) && (l_tela->atual->y == l_tiro->atual->y)){
             endwin();
+            exit(1);
     }
 }
 
