@@ -82,11 +82,13 @@ int insere_missel(t_lista *l_tela, t_lista *l_tiro){
 }
 
 int insere_missel_alien(t_lista *l_tela, t_lista *l_tiro){
-    srand(time(NULL));
+    /*srand(time(NULL));
     int r = rand ()% (54 + 1);
     inicializa_atual_ultimo_alien(l_tela);
     for(int i = 0; i < r; i++)
-        decrementa_atual(l_tela);
+        decrementa_atual(l_tela);*/
+    inicializa_atual_inicio(l_tela);
+    incrementa_atual(l_tela);
     insere_fim_lista(1,l_tela->atual->y + 4,l_tela->atual->x +2,0,1,l_tiro);
     return 1;
 }
@@ -311,6 +313,7 @@ void Atualiza_Missel_y(t_lista *l_tiro){
 }}
 
 void Atualiza_MisselAlien(t_lista *l_tela,t_lista *l_tiro){
+    if(disparado_alien == 0){
     srand(time(NULL));
     int r = rand ()% (54 + 1);
     inicializa_atual_ultimo_alien(l_tela);
@@ -320,6 +323,7 @@ void Atualiza_MisselAlien(t_lista *l_tela,t_lista *l_tiro){
     incrementa_atual(l_tiro);
     l_tiro->atual->x= l_tela->atual->x + 2;
     l_tiro->atual->y = l_tela->atual->y + 4;
+    }
 
 }
 
@@ -331,6 +335,7 @@ void Anda_MisselAlien_y(t_lista *l_tiro){
         disparado_alien = 0;
     }
     l_tiro->atual->y += 1;
+
 }
 
 
@@ -423,10 +428,9 @@ void Raspou_Alien_Barreira(t_lista *l_tela){
                 if(l_tela->atual->condicao != 2)
                     l_tela->auxiliar->condicao = 2;}
             decrementa_atual(l_tela);
-        }
+        }}
         incrementa_auxiliar(l_tela);
     }
-}
 
 void Recomecar(t_lista*l_tela,t_lista*l_tiro){
     destroi_lista(l_tela);
@@ -519,13 +523,13 @@ while(1){
     Atingiu__TiroNave_Barreira(&l_tela, &l_tiro);
     Atingiu__TiroALien_Barreira(&l_tela, &l_tiro);
     Raspou_Alien_Barreira(&l_tela);
-    if(iter > (70 - aliens_mortos - l_tela.ini->prox->velocidade)){
+    if(iter > (30 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
         if(disparado_alien ==  0)
             disparado_alien = 1;
         iter = 1;
         }
-    if(iter_alien > 30){
+    if(iter_alien > 100){
         disparado_alien = 1;
         iter_alien = 0;}
     if(iter % 5000){
