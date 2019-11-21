@@ -145,7 +145,6 @@ void Desenha_NaveMae(int lin, int col, NaveMae *navemae){
 }
 
 void Desenha_Nave(int lin, int col, Nave *nave){
-    wattron(stdscr, COLOR_PAIR(1));
     int i, j;
 	for (i = 0; i < nave->altura; i++)
 		for (j = 0; j < nave->largura; j++)
@@ -156,6 +155,7 @@ void Desenha_Nave(int lin, int col, Nave *nave){
 }
 
 void Desenha_Alien(int lin, int col, int tipo, Alien *alien){
+    wattron(stdscr, COLOR_PAIR(1));
 	int i, j, nlin, ncol;
 	char *forma_atual;
 	
@@ -551,10 +551,14 @@ while(1){
     Raspou_Alien_Barreira(&l_tela);
     if(iter > (30 - aliens_mortos - l_tela.ini->prox->velocidade)){
         AtualizaAliens(&l_tela, alien, &direcao);
-        if(disparado_alien ==  0)
-            disparado_alien = 1;
         iter = 1;
         }
+    if(iter_alien > 50){
+        if(disparado_alien == 0)
+            disparado_alien = 1;
+        iter_alien = 1;
+    }
+
     if(iter % 5000){
         AtualizaNaveMae(&l_tela, &anda);
     }
@@ -564,6 +568,7 @@ while(1){
     refresh();   
 	usleep(INTERVALO);
     iter++;
+    iter_alien++;
 	}
 	endwin();
 }
