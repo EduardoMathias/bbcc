@@ -1,0 +1,33 @@
+  COMANDOS IMPORTANTES
+
+ FILE* dic; 
+    dic = fopen(dictionary, "r"); 
+
+char buffer[LENGTH+1];
+    while (fgets(dic, "%s", buffer) != NULL)
+
+typedef struct lista_palavras{
+	char **palavra;
+	int tamanho_usado;
+	int tamanho_total;
+}lista_palavras;
+
+lista_palavras *palavras;
+
+//Cria Lista_palavras
+palavras->palavra = malloc(INITIAL_SIZE * sizeof(char *));
+palavras->tamanho_usado = 0;
+palavras->tamanho_total = INITIAL_SIZE;
+
+//EXPANSAO DE LINHAS
+palavras->palavra = realloc(palavras->palavra, newSize * sizeof(char *));
+palavras->tamanho_total = newSize;
+
+//EXPANSAO PALAVRAS
+buffer[palavras->tamanho_inicial] = malloc(strlen(buffer) + 1);
+    strcpy(palavras->palavra[palavras->tamanho_inicial], buffer);
+palavras->tamanho_inicial++;
+  if (palavras->tamanho_usado == HistoryArray->tamanho_total){
+        newSize = palavras->tamanho_total* 2;
+    }
+}
