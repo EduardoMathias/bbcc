@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX 100
 
-typedef struct lista_palavras{
-	char **palavra;
-	int tamanho_usado;
-	int tamanho_total;
-}lista_palavras;
+typedef char *lista_palavra[MAX];
+
+size_t carrega_dic(FILE *, lista_palavra*);
