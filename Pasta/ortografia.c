@@ -11,8 +11,6 @@ int main(int argc, char **argv){
         fprintf(stderr, "Erro ao abrir o arquivo brazilian");
         return 1;
     } 
-    lista_palavra *palavra;
-
-    size_t contagem_palavras = carrega_dic(dic, palavra);
+    carrega_dic(dic);
     
     }

@@ -2,19 +2,21 @@
 #include <stdio.h>
 #include <string.h>
 
-size_t carrega_dic(FILE *dic, lista_palavra *palavra){
+size_t carrega_dic(FILE *dic){
     char buffer[50];
-    int count = 0;
-    int alocagens = MAX;
+    int alocagens = 50;
     int i = 0;
-    while((fgets(buffer,count, dic)) != NULL){
+    lista_palavra *dici = malloc(sizeof(lista_palavra)*100);
+    while((fgets(buffer,50, dic)) != NULL){
         if(i >= alocagens){
-            alocagens = MAX*2;
-            palavra = realloc(palavra, alocagens*sizeof(char));
+           alocagens = alocagens*2;
+           dici = realloc(dici, alocagens*sizeof(char *));
         }
-        *palavra[i] = malloc(strlen(buffer+1)*sizeof(char *));
-        strcpy(*palavra[i], buffer);
+        *dici[i] = malloc((strlen(buffer)+1)*sizeof(char *));
+        strcpy(*dici[i], buffer);
         i++;
     }
+    free(dici);
+    free(*dici);
     return i;
 }
