@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-size_t carrega_dic(FILE *dic){
+size_t carrega_dic(FILE *dic, lista_palavra **palavra){
     char buffer[50];
     int alocagens = 50;
     int i = 0;
@@ -12,11 +12,10 @@ size_t carrega_dic(FILE *dic){
            alocagens = alocagens*2;
            dici = realloc(dici, alocagens*sizeof(char *));
         }
-        *dici[i] = malloc((strlen(buffer)+1)*sizeof(char *));
-        strcpy(*dici[i], buffer);
+        dici[i] = malloc((strlen(buffer)+1)*sizeof(char *));
+        strcpy(dici[i], buffer);
         i++;
     }
-    free(dici);
-    free(*dici);
+    *palavra = dici;
     return i;
 }

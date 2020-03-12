@@ -1,7 +1,5 @@
-CFLAGS = -Wall -Wextra  -pedantic -fsanitize=address -O3
+CFLAGS = -Wall -Wextra -pedantic -O3
 CC = gcc
-LDFLAGS =  -fsanitize=address
-LBLIBS = -lncurses
 
 SRC = ortografia.c dicionario.c 
 OBJ = $(SRC:.c=.o)
@@ -10,7 +8,7 @@ EXEC = dic
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
-	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LBLIBS)
+	$(CC)  -o $@ $(OBJ)
 
 clean:
 	rm -rf $(OBJ) $(EXEC)
