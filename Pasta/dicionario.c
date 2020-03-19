@@ -1,24 +1,49 @@
 #include "dicionario.h"
-#include <ctype.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#define MAX 50
+#include <locale.h>
+#include <ctype.h>
+#define MAX 100
 
-size_t carrega_dic(FILE *dic, lista_palavra **palavra){
-    char buffer[MAX];
-    int alocagens = MAX;
-    int i = 0;
-    lista_palavra *dici = malloc(sizeof(lista_palavra)*100);
-    while((fgets(buffer,50, dic)) != NULL){
-        if(i >= alocagens){
-           alocagens = alocagens*2;
-           dici = realloc(dici, alocagens*sizeof(char *));
-        }
-        buffer[strcspn(buffer, "\n")] = '\0';
-        dici[i] = malloc((strlen(buffer)+1)*sizeof(char *));
-        strcpy(dici[i], buffer);
-        i++;
-    }
-    *palavra = dici;
-    return i;
+int compar(const void *palavra1,const void *palavra2){
+    return (strcmp(*(char**)palavra1, *(char **)palavra2));
 }
+
+int main(){
+    setlocale(LC_ALL, "pt_BR.iso88591");
+    FILE* dic; 
+    dic = fopen("brazilian", "r");
+    if(dic == NULL) {
+        fprintf(stderr, "Erro ao abrir o arquivo brazilian");
+        return 1;
+    }
+    lista_palavra *palavra;
+    int size = carrega_dic(dic, &palavra);
+    int c;
+    lista_palavra word = malloc(64UL);
+    char * wordoriginal = malloc(64UL);
+    while((c = getchar())!= EOF){
+        int i = 0;
+        if(isalpha(c)){
+            wordoriginal[i] = c;
+            word[i] = tolower(c);
+            int i = 1;
+            while(isalpha(c = getchar())){
+                wordoriginal[i] = c;
+                word[i] = tolower(c);
+                i++;
+                }
+            word[i] = '\0';
+            wordoriginal[i] = '\0';
+            char **saida = bsearch(&word, palavra, size, sizeof(char *),compar);
+            char **saida2 = bsearch(&wordoriginal, palavra, size, sizeof(char *), compar);
+            if(saida || saida2)
+                    printf("%s", *saida2);
+            else
+                    printf("[%s]", *saida2);
+        }
+        printf("%c", c);
+     }
+     fclose(dic);
+} 
