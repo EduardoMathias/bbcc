@@ -3,7 +3,7 @@ CC = gcc
 
 SRC = ortografia.c dicionario.c 
 OBJ = $(SRC:.c=.o)
-EXEC = dic
+EXEC = ortografia
 
 all: $(EXEC)
 
