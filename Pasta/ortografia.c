@@ -4,7 +4,7 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
-#define MAX 250
+#define MAX 100
 
 int compar(const void *palavra1,const void *palavra2){
     return (strcmp(*(char**)palavra1, *(char **)palavra2));
@@ -21,25 +21,27 @@ int main(){
     lista_palavra *palavra;
     int size = carrega_dic(dic, &palavra);
     int c;
-    char word[MAX];
-    char wordoriginal[MAX];
+    lista_palavra word = malloc(64UL);
+    char * wordoriginal = malloc(64UL);
     while((c = getchar())!= EOF){
         int i = 0;
-        if(letra(c)){
+        if(isalpha(c)){
             wordoriginal[i] = c;
             word[i] = tolower(c);
-            while(letra(c = getchar())){
-                word[i] = tolower(c);
+            int i = 1;
+            while(isalpha(c = getchar())){
                 wordoriginal[i] = c;
-                i++;}
+                word[i] = tolower(c);
+                i++;
+                }
             word[i] = '\0';
             wordoriginal[i] = '\0';
-            char **saida = bsearch((&word), palavra, size, sizeof(char *),compar);
-            char **saida2 = bsearch((&wordoriginal), palavra, size, sizeof(char *), compar);
+            char **saida = bsearch(&word, palavra, size, sizeof(char *),compar);
+            char **saida2 = bsearch(&wordoriginal, palavra, size, sizeof(char *), compar);
             if(saida || saida2)
-                    printf("%s",*saida);
+                    printf("%s", wordoriginal);
             else
-                    printf("[ %s ]", *saida);
+                    printf("[%s]", wordoriginal);
         }
         printf("%c", c);
      }
