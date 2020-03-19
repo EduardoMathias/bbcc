@@ -4,7 +4,7 @@
 #include <string.h>
 #define MAX 50
 
-size_t carrega_dic(FILE *dic, lista_palavra **palavra){
+size_t carrega_dic(FILE *dic, lista_palavra **dicionario){
     char buffer[MAX];
     int alocagens = MAX;
     int i = 0;
@@ -19,6 +19,11 @@ size_t carrega_dic(FILE *dic, lista_palavra **palavra){
         strcpy(dici[i], buffer);
         i++;
     }
-    *palavra = dici;
+    *dicionario = dici;
     return i;
+}
+
+void destroi_dic(lista_palavra **dicionario, int size){
+    for(int i = 0; i < size; i++)
+        free((*dicionario)[i]);
 }
