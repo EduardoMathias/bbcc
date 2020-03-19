@@ -1,4 +1,5 @@
 #include "dicionario.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #define MAX 50
@@ -23,7 +24,7 @@ size_t carrega_dic(FILE *dic, lista_palavra **palavra){
 }
 
 int letra(int c){
-    if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+    if(isalpha(c))
     {
         return 1;
     }

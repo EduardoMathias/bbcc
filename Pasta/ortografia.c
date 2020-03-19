@@ -4,13 +4,13 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
-#define MAX 50
+#define MAX 100
 
-int compar(const void *s1, const void *s2){
-    return (strcmp(*(char**)s1, *(  char **)s2));
+int compar(const void *palavra1,const void *palavra2){
+    return (strcmp(*(char**)palavra1, *(char **)palavra2));
 }
 
-int main(int argc, char **argv){
+int main(){
     setlocale(LC_ALL, "pt_BR.iso88591");
     FILE* dic; 
     dic = fopen("brazilian", "r");
@@ -20,29 +20,28 @@ int main(int argc, char **argv){
     }
     lista_palavra *palavra;
     int size = carrega_dic(dic, &palavra);
-    int c = getchar();
+    int c;
     char word[MAX];
     char wordoriginal[MAX];
-    while(getchar() != EOF){
+    while((c = getchar())!= EOF){
         int i = 0;
-        while((!(letra(c))) && (getchar() != EOF)){
-            printf("%c", c);
-            c = getchar();
-        }
-        while((letra(c)) && (getchar()!= EOF)){
+        if(letra(c)){
             wordoriginal[i] = c;
             word[i] = tolower(c);
-            c = getchar();
-            i++;
+            while(letra(c = getchar())){
+                word[i] = tolower(c);
+                wordoriginal[i] = c;
+                i++;}
+            word[i] = '\0';
+            wordoriginal[i] = '\0';
+            char **saida = bsearch((&word), palavra, size, sizeof(char),compar);
+            char **saida2 = bsearch((&wordoriginal), palavra, size, sizeof(char), compar);
+            if(saida || saida2)
+                    printf("%s",*saida);
+            else
+                    printf("[ %s ]", *saida);
         }
-        if(!strcmp(word, " ")){
-            char **saida = bsearch((&word), palavra, sizeof(lista_palavra), sizeof(word),compar);
-            if(saida){
-                printf("%s",*saida);
-            }
-            else{
-                printf("[ %s ]", *saida);
-            }   
-        }
-    }
-}
+        printf("%c", c);
+     }
+     fclose(dic);
+} 
