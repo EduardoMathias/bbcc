@@ -4,7 +4,7 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
-#define MAX 100
+#define MAX 250
 
 int compar(const void *palavra1,const void *palavra2){
     return (strcmp(*(char**)palavra1, *(char **)palavra2));
@@ -34,8 +34,8 @@ int main(){
                 i++;}
             word[i] = '\0';
             wordoriginal[i] = '\0';
-            char **saida = bsearch((&word), palavra, size, sizeof(char),compar);
-            char **saida2 = bsearch((&wordoriginal), palavra, size, sizeof(char), compar);
+            char **saida = bsearch((&word), palavra, size, sizeof(char *),compar);
+            char **saida2 = bsearch((&wordoriginal), palavra, size, sizeof(char *), compar);
             if(saida || saida2)
                     printf("%s",*saida);
             else
