@@ -13,13 +13,13 @@ int compar(const void *palavra1,const void *palavra2){
 int main(){
     setlocale(LC_ALL, "pt_BR.iso88591");
     FILE* dic; 
-    dic = fopen("brazilian", "r");
+    dic = fopen("brazilian", "r"); 
     if(dic == NULL) {
         fprintf(stderr, "Erro ao abrir o arquivo brazilian");
         return 1;
     }
-    lista_palavra *palavra;
-    int size = carrega_dic(dic, &palavra);
+    lista_palavra *dicionario;
+    int size = carrega_dic(dic, &dicionario);
     int c;
     lista_palavra word = malloc(64UL);
     char * wordoriginal = malloc(64UL);
@@ -36,8 +36,8 @@ int main(){
                 }
             word[i] = '\0';
             wordoriginal[i] = '\0';
-            char **saida = bsearch(&word, palavra, size, sizeof(char *),compar);
-            char **saida2 = bsearch(&wordoriginal, palavra, size, sizeof(char *), compar);
+            char **saida = bsearch(&word, dicionario, size, sizeof(char *),compar);
+            char **saida2 = bsearch(&wordoriginal, dicionario, size, sizeof(char *), compar);
             if(saida || saida2)
                     printf("%s", wordoriginal);
             else
@@ -45,5 +45,8 @@ int main(){
         }
         printf("%c", c);
      }
+     destroi_dic(&dicionario, size);
      fclose(dic);
+     free(word);
+     free(wordoriginal);
 } 
