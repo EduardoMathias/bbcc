@@ -22,11 +22,3 @@ size_t carrega_dic(FILE *dic, lista_palavra **palavra){
     *palavra = dici;
     return i;
 }
-
-int letra(int c){
-    if(isalpha(c))
-    {
-        return 1;
-    }
-    return 0;
-}
